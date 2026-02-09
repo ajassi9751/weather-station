@@ -11,4 +11,4 @@ c: c/main.c
 	clang -c c/main.c -o build/main.o
 
 link: rust c build/main.o build/rust.o
-	ldd -o build/main build/main.o build/rust.o
+	lld -o build/main build/main.o build/rust.o
