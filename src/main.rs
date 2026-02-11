@@ -1,5 +1,7 @@
 mod c;
 mod io;
+use wiringpi::pin::Value::{self, High, Low};
+use std::{thread, time};
 // Use: cargo build --features wiringpi/development, to build in development but it wont interact with gpio
 // To install wiring pi use wget https://github.com/WiringPi/WiringPi/releases/download/3.18/wiringpi_3.18_arm64.deb
 // Then use sudo apt install ./[filename]
@@ -14,6 +16,9 @@ fn main() {
     let mut mycsv = io::csv::csv::new(headers, body);
     let _ = mycsv.save_to_file("data/my.csv");
     let _ = mycsv.write_new_row("data/my.csv", vec![String::from("really"), String::from("really")]);
+    let pi = wiringpi::setup();
+    let pin = pi.input_pin(24);
+    let value = pin.digital_read();
     println!("Hello, world!");
     println!("{}", c::add::add(1,2));
 }
