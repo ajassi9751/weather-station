@@ -1,0 +1,1 @@
+void read_dht11_dat();

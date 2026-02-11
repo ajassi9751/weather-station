@@ -4,8 +4,9 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
+dht-mmap-rust = "0.1.0"
 # gpio = "0.4.1"
-wiringpi = "0.2.4"
+# wiringpi = "0.2.4"
 
 [build-dependencies]
 cc = "1.0"
