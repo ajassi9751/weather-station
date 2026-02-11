@@ -3,19 +3,25 @@ use std::fs::write;
 
 #[allow(non_camel_case_types)]
 pub struct csv {
-    pub headers: Vec<String>,   // Vec of strings is kind of sad
-    pub body: Vec<Vec<String>>, // Vec of Vec of strings is even sadder
+    headers: Vec<String>,   // Vec of strings is kind of sad
+    body: Vec<Vec<String>>, // Vec of Vec of strings is even sadder
 }
 
 // We also want to use multiple files in case one gets overwritten
 // Maybe a weelky new file?
 // Need to also get the date and time
 impl csv {
-    pub fn new() -> csv {
+    pub fn new_default() -> csv {
         csv {
             headers: Vec::new(),
             body: Vec::new(),
         }
+    }
+    pub fn new(headers: Vec<String>, body: Vec<Vec<String>>) -> csv {
+         csv {
+            headers: headers,
+            body: body,
+        }       
     }
     pub fn save_to_file(&self, file_path: &str) -> Result<(), IoError> {
         let mut contents: String = String::from("");
@@ -48,7 +54,7 @@ impl csv {
             }
         }
     }
-    pub fn write_new_row(&mut self, file_path: &String, row: Vec<String>) -> std::io::Result<()> {
+    pub fn write_new_row(&mut self, file_path: &str, row: Vec<String>) -> std::io::Result<()> {
         let file_contents = read_to_string(file_path)?;
         let mut contents = file_contents;
         let mut is_first_iter = true;
