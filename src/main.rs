@@ -1,5 +1,9 @@
 mod c;
 mod io;
+// Use: cargo build --features wiringpi/development, to build in development but it wont interact with gpio
+// To install wiring pi use wget https://github.com/WiringPi/WiringPi/releases/download/3.18/wiringpi_3.18_arm64.deb
+// Then use sudo apt install ./[filename]
+// Wiringpi is only build for arm so it will have to be tested on the pi
 
 // This program is optimized for battery usage and will poll instruments every 5 min and should take
 // Battery life into account
