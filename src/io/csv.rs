@@ -3,8 +3,8 @@ use std::fs::write;
 
 #[allow(non_camel_case_types)]
 pub struct csv {
-    headers: Vec<String>,   // Vec of strings is kind of sad
-    body: Vec<Vec<String>>, // Vec of Vec of strings is even sadder
+    pub headers: Vec<String>,   // Vec of strings is kind of sad
+    pub body: Vec<Vec<String>>, // Vec of Vec of strings is even sadder
 }
 
 // We also want to use multiple files in case one gets overwritten
