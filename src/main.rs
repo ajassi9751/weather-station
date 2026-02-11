@@ -28,7 +28,7 @@ fn main() {
     //     }
     // }
     // The sensor is a DHT11 connected on pin 23
-    let mut dht = Dht::new(DhtType::Dht11, 6).expect("Failed to get gpio pin 6");
+    let mut dht = get_dht(6);
 
     // Important: DHT sensor reads fail sometimes. In an actual program, if a read fails you should retry multiple times until
     // the read succeeds.
@@ -44,4 +44,14 @@ fn main() {
     }
     // println!("Hello, world!");
     // println!("{}", c::add::add(1,2));
+}
+
+fn get_dht (pin: usize) -> Dht {
+    match Dht::new(DhtType::Dht11, pin) {
+        Ok(v) => v,
+        Err(e) => {
+            println!("Error accessing dht");
+            get_dht(pin)
+        },
+    }
 }
