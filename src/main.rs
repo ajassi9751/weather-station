@@ -8,8 +8,8 @@ fn main() {
     let headers: Vec<String> = vec![String::from("Temp"), String::from("Coolness")];
     let body: Vec<Vec<String>> = vec![vec![String::from("Nice"), String::from("and Cool")], vec![String::from("Really"), String::from("Cool")]];
     let mut mycsv = io::csv::csv::new(headers, body);
-    let _ = mycsv.save_to_file("my.csv");
-    let _ = mycsv.write_new_row("my.csv", vec![String::from("really"), String::from("really")]);
+    let _ = mycsv.save_to_file("data/my.csv");
+    let _ = mycsv.write_new_row("data/my.csv", vec![String::from("really"), String::from("really")]);
     println!("Hello, world!");
     println!("{}", c::add::add(1,2));
 }

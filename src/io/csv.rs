@@ -70,6 +70,9 @@ impl csv {
         write(file_path, contents)?;
         Ok(())
     }
+    pub fn new_row(&mut self, row: Vec<String>) {
+        self.body.push(row);
+    }
 }
 
 // Rust says that the struct is never constructed even though it is
