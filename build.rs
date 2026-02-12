@@ -3,9 +3,9 @@ use std::fs::read_dir;
 use std::process::exit;
 
 fn main() {
-    unsafe {
-        std::env::set_var("CFLAGS", "-l wiringPi");
-    }
+    // unsafe {
+    //     std::env::set_var("CFLAGS", "-l wiringPi");
+    // }
     let mut filenames: Vec<String> = Vec::new();
     get_file_paths(&mut filenames, "c/");
     let mut compilenames: Vec<String> = Vec::new();
@@ -18,6 +18,8 @@ fn main() {
         Build::new().file(src).compile(libname.as_str());
     }
     // Build::new().file("c/main.c").compile("main");
+    println!("cargo:rustc-link-search=native=/usr/local/lib");
+    println!("cargo:rustc-link-lib=wiringPi");
 }
 
 fn get_file_paths(filenames: &mut Vec<String>, path: &str) {
@@ -83,3 +85,4 @@ fn get_file_names(filenames: &mut Vec<String>, path: &str) {
         }
     }
 }
+
