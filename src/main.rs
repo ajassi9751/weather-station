@@ -34,22 +34,27 @@ fn main() {
     //     }
     // }
     // The sensor is a DHT11 connected on pin 23
-    let mut dht = get_dht(11);
+    // let mut dht = get_dht(11);
 
     // Important: DHT sensor reads fail sometimes. In an actual program, if a read fails you should retry multiple times until
     // the read succeeds.
     // For more information, see documentation on `read()`
-    loop {
-        let reading = dht.read().expect("Failed to read dht");
+    // loop {
+        // let reading = dht.read().expect("Failed to read dht");
 
-        println!(
-            "Temperature {} °C, Humidity {}%RH",
-            reading.temperature(),
-            reading.humidity()
-        );
-    }
+        // println!(
+        //     "Temperature {} °C, Humidity {}%RH",
+        //     reading.temperature(),
+        //     reading.humidity()
+        // );
+    // }
     // println!("Hello, world!");
     // println!("{}", c::add::add(1,2));
+    c::dht11::setup_wiring_pi();
+    loop {
+        thread::sleep(time::Duration::from_millis(2000));
+        c::dht11::read_dht11_dat();
+    }
 }
 
 fn get_dht(pin: usize) -> Dht {

@@ -1,9 +1,9 @@
-#include <wiringPi.h>
+#include "wiringPi.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
 #define MAXTIMINGS	85
-#define DHTPIN		7
+#define DHTPIN		11
 int dht11_dat[5] = { 0, 0, 0, 0, 0 };
  
 void read_dht11_dat()
@@ -57,6 +57,11 @@ void read_dht11_dat()
 	}else  {
 		printf( "Data not good, skip\n" );
 	}
+}
+
+void setup_wiring_pi() {
+	if ( wiringPiSetup() == -1 )
+		exit( 1 );
 }
  
 // int main( void )

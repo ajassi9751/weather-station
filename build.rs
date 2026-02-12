@@ -3,6 +3,9 @@ use std::fs::read_dir;
 use std::process::exit;
 
 fn main() {
+    unsafe {
+        std::env::set_var("CFLAGS", "-l wiringPi");
+    }
     let mut filenames: Vec<String> = Vec::new();
     get_file_paths(&mut filenames, "c/");
     let mut compilenames: Vec<String> = Vec::new();
