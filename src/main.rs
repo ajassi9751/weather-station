@@ -57,8 +57,8 @@ fn get_dht(pin: usize) -> Dht {
         Ok(v) => v,
         Err(_e) => {
             println!("Error accessing dht");
+            thread::sleep(time::Duration::from_millis(1000));
             get_dht(pin)
         }
     }
 }
-
