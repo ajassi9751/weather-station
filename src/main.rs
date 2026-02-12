@@ -34,7 +34,7 @@ fn main() {
     //     }
     // }
     // The sensor is a DHT11 connected on pin 23
-    let mut dht = get_dht(6);
+    let mut dht = get_dht(8);
 
     // Important: DHT sensor reads fail sometimes. In an actual program, if a read fails you should retry multiple times until
     // the read succeeds.
