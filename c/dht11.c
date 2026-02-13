@@ -1,3 +1,5 @@
+// Modified code of whats found in the hardware manufacturures example
+// https://github.com/adeept/Adeept_Ultimate_Starter_Kit_C_Code_for_RPi/blob/master/15_DHT11/dht11.c
 #include "wiringPi.h"
 #include <stdio.h>
 #include <stdlib.h>
