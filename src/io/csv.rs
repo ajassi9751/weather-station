@@ -23,6 +23,12 @@ impl csv {
             body: body,
         }       
     }
+    pub fn give_headers(&mut self, headers: Vec<String>) {
+        self.headers = headers;
+    }
+    pub fn give_body(&mut self, body: Vec<Vec<String>>) {
+        self.body = body;
+    }
     pub fn save_to_file(&self, file_path: &str) -> Result<(), IoError> {
         let mut contents: String = String::from("");
         for header in &self.headers {
