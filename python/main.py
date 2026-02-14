@@ -3,7 +3,7 @@
 import RPi.GPIO as GPIO
 import time
 
-LedPin = 11    # pin11
+LedPin = 3    # pin11
 
 GPIO.setmode(GPIO.BOARD)       # Numbers pins by physical location
 GPIO.setup(LedPin, GPIO.OUT)   # Set pin mode as output
