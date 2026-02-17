@@ -3,9 +3,9 @@
 import RPi.GPIO as GPIO
 import time
 
-LedPin = 2
+LedPin = 17
 
-GPIO.setmode(GPIO.BCM)       # Use BCM numbering
+GPIO.setmode(GPIO.BOARD)       # Use BCM numbering
 GPIO.setup(LedPin, GPIO.OUT) # Set pin mode as output
 GPIO.output(LedPin, GPIO.HIGH) # Set pin to high(+3.3V) to turn off the LED
 

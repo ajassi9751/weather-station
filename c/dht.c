@@ -1,5 +1,3 @@
-// Modified code of whats found in the hardware manufacturures example
-// https://github.com/adeept/Adeept_Ultimate_Starter_Kit_C_Code_for_RPi/blob/master/15_DHT11/dht11.c
 #include <wiringPi.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -60,28 +58,19 @@ void read_dht11_dat()
 		printf( "Data not good, skip\n" );
 	}
 }
-
-//void setup_wiring_pi() {
-//	if ( wiringPiSetup() == -1 )
-//		exit( 1 );
-//}
  
-void setup_wiring_pi() {
-	wiringPiSetupGpio();
+int main( void )
+{
+	printf( "Raspberry Pi wiringPi DHT11 Temperature test program\n" );
+ 
+	if ( wiringPiSetup() == -1 )
+		exit( 1 );
+ 
+	while ( 1 )
+	{
+		read_dht11_dat();
+		delay( 1000 ); 
+	}
+ 
+	return(0);
 }
-
-// int main( void )
-// {
-// 	printf( "Raspberry Pi wiringPi DHT11 Temperature test program\n" );
- 
-// 	if ( wiringPiSetup() == -1 )
-// 		exit( 1 );
- 
-// 	while ( 1 )
-// 	{
-// 		read_dht11_dat();
-// 		delay( 1000 ); 
-// 	}
- 
-// 	return(0);
-// }
