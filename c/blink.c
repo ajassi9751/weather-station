@@ -2,12 +2,7 @@
 #include <stdio.h>
 #include <unistd.h>
 
-int main()
-{
-	blink();
-}
-
-blink () {
+int blink () {
   // uses BCM numbering of the GPIOs and directly accesses the GPIO registers.
   wiringPiSetupGpio();
 
@@ -34,4 +29,9 @@ blink () {
     digitalWrite(17, LOW);
     sleep(1);
   }
+}
+
+int main()
+{
+	blink();
 }

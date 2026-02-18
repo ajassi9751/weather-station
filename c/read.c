@@ -4,12 +4,7 @@
 
 #define PIN_NUMBER 17
 
-int main()
-{
-	read();
-}
-
-read () {
+void readPin () {
 	// uses BCM numbering of the GPIOs and directly accesses the GPIO registers.
 	wiringPiSetupGpio();
 
@@ -35,4 +30,9 @@ read () {
 		delayMicroseconds(20000);
 	// 	sleep(1);
 	}
+}
+
+int main()
+{
+	readPin();
 }
