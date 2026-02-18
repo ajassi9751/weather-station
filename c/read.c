@@ -2,14 +2,20 @@
 #include <stdio.h>
 #include <unistd.h>
 
-int main(void)
+#define PIN_NUMBER 17
+
+int main()
 {
+	read();
+}
+
+read () {
 	// uses BCM numbering of the GPIOs and directly accesses the GPIO registers.
 	wiringPiSetupGpio();
 
 	// pin mode ..(INPUT, OUTPUT, PWM_OUTPUT, GPIO_CLOCK)
 	// set pin 17 to input
-	pinMode(17, OUTPUT);
+	pinMode(PIN_NUMBER, OUTPUT);
 
 	// pull up/down mode (PUD_OFF, PUD_UP, PUD_DOWN) => down
 	// pullUpDnControl(17, PUD_DOWN);
@@ -18,7 +24,7 @@ int main(void)
 
 	while (true) {
 		// printf("Loop\n");
-		int value = digitalRead(17);
+		int value = digitalRead(PIN_NUMBER);
 		if (HIGH == value)
 		{
 			printf("Its high\n");
@@ -26,7 +32,7 @@ int main(void)
 		else {
 			printf("Its low\n");
 		}
-		delayMicroseconds(1);
+		delayMicroseconds(20000);
 	// 	sleep(1);
 	}
 }
