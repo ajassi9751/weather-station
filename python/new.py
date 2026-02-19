@@ -1,3 +1,7 @@
+# Must compile the lgpio library and install using make for this to work
+# We are working on converting this into a c based implementation (with wiringPi) to improve speed
+# And get rid of this akward dependency
+
 import RPi.GPIO as GPIO
 import time
 

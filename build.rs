@@ -2,6 +2,8 @@ use cc::Build;
 use std::fs::read_dir;
 use std::process::exit;
 
+// I wonder if there is a way to auto install wiringPi, that would be great
+
 fn main() {
     // unsafe {
     //     std::env::set_var("CFLAGS", "-l wiringPi");

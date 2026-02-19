@@ -1,5 +1,6 @@
-// Modified code of whats found in the hardware manufacturures example
+// Slightly modified code of whats found in the hardware manufacturures example
 // https://github.com/adeept/Adeept_Ultimate_Starter_Kit_C_Code_for_RPi/blob/master/15_DHT11/dht11.c
+// This code doesn't really work and always says data not good so we are translating the python file (that works) to c
 #include <wiringPi.h>
 #include <stdio.h>
 #include <stdlib.h>
