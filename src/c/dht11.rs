@@ -1,3 +1,4 @@
+// dht11.c doesn't really work but this was a binding to call that c file
 mod c {
     unsafe extern "C" {
         pub fn read_dht11_dat();

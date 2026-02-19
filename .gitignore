@@ -1,3 +1,6 @@
+// Default rust ignore
 target/
+// For test csv files
 *.csv
+// For compiled bianaries
 c/main

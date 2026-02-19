@@ -1,4 +1,7 @@
 use std::ffi::CStr;
+// The reason to use c to get the time is because it is preetier than the rust version
+// It formats it nicley as dayoftheweek month dayofmonth HH:MM:SS year
+// And it is quite reliable (not to say rust isn't)
 
 mod c {
     use std::ffi::c_char;

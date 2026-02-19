@@ -1,16 +1,17 @@
 mod c;
 mod io;
-// use wiringpi::pin::Value::{self, High, Low};
-use dht_mmap_rust::{Dht, DhtType};
+// use dht_mmap_rust::{Dht, DhtType};
 use std::{thread, time};
-// Use: cargo build --features wiringpi/development, to build in development but it wont interact with gpio
+// We basically have a rust storage backend for managing data but tons of c code for interacting with sensors and wiringPi
+// To individually compile a c file that uses wiringPi make sure to use the -l wiringPi flag
+
 // To install wiring pi use wget https://github.com/WiringPi/WiringPi/releases/download/3.18/wiringpi_3.18_arm64.deb
 // Then use sudo apt install ./[filename]
 // Wiringpi is only build for arm so it will have to be tested on the pi
 
 // This program is optimized for battery usage and will poll instruments every 5 min and should take
 // Battery life into account
-// Writing to files will not use buffered writes as every hour makes them worthless
+// Writing to files will not use buffered writes as every 5 min makes them worthless
 fn main() {
     let headers: Vec<String> = vec![String::from("Temp"), String::from("Coolness")];
     let body: Vec<Vec<String>> = vec![
@@ -57,13 +58,13 @@ fn main() {
     }
 }
 
-fn get_dht(pin: usize) -> Dht {
-    match Dht::new(DhtType::Dht11, pin) {
-        Ok(v) => v,
-        Err(_e) => {
-            println!("Error accessing dht");
-            thread::sleep(time::Duration::from_millis(1000));
-            get_dht(pin)
-        }
-    }
-}
+// fn get_dht(pin: usize) -> Dht {
+//     match Dht::new(DhtType::Dht11, pin) {
+//         Ok(v) => v,
+//         Err(_e) => {
+//             println!("Error accessing dht");
+//             thread::sleep(time::Duration::from_millis(1000));
+//             get_dht(pin)
+//         }
+//     }
+// }

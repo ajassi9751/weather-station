@@ -8,8 +8,7 @@ pub struct csv {
 }
 
 // We also want to use multiple files in case one gets overwritten
-// Maybe a weelky new file?
-// Need to also get the date and time
+// Maybe a weekly new file?
 impl csv {
     pub fn new_default() -> csv {
         csv {

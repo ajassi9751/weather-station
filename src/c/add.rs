@@ -1,3 +1,4 @@
+// This files just exists as an initial test to build infastructure to make sure rust and c were compiling and linking properly
 mod c {
     use std::ffi::c_int;
     unsafe extern "C" {
