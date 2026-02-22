@@ -4,10 +4,11 @@
 
 #define channel 17
 
-main () {
+int main () {
 	printf("Start\n");
 	int data[100];
 	int j = 0;
+	int datai = 0;
 	setupWiringPiGpio();
 	sleep(1);
 	pinMode(channel, OUTPUT);
@@ -22,31 +23,34 @@ main () {
 		continue;
 	}
 	while (j<40) {
-		while () {
-
+		int k = 0;
+		while (digitalRead(channel)==LOW) {
+			continue;
 		}
+		while (digitalRead(channel)==HIGH) {
+			k++;
+			if (k>100)
+				break;
+		}
+		if (k<8) {
+			data[datai] = 0;
+			datai++;
+		}
+		else {
+			data[datai] = 1;
+			datai++;
+		}
+		j++;
+	}
+	printf("sensor is working.");
+	for (int i = 0; i < datai-1; i++) {
+		printf("%d", data[i]);
+	}
+	int humidity_bit[8];
+	for (int i = 0; i < datai-1; i++) {
+
 	}
 }
-
-while j < 40:
-	k = 0
-	while GPIO.input(channel) == GPIO.LOW:
-		continue
-
-	while GPIO.input(channel) == GPIO.HIGH:
-		k += 1
-		if k > 100:
-			break
-
-	if k < 8:
-		data.append(0)
-	else:
-		data.append(1)
-
-	j += 1
-
-print ("sensor is working.")
-print (data)
 
 humidity_bit = data[0:8]
 humidity_point_bit = data[8:16]

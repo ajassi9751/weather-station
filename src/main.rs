@@ -41,13 +41,13 @@ fn main() {
     // the read succeeds.
     // For more information, see documentation on `read()`
     // loop {
-        // let reading = dht.read().expect("Failed to read dht");
+    // let reading = dht.read().expect("Failed to read dht");
 
-        // println!(
-        //     "Temperature {} °C, Humidity {}%RH",
-        //     reading.temperature(),
-        //     reading.humidity()
-        // );
+    // println!(
+    //     "Temperature {} °C, Humidity {}%RH",
+    //     reading.temperature(),
+    //     reading.humidity()
+    // );
     // }
     // println!("Hello, world!");
     // println!("{}", c::add::add(1,2));
