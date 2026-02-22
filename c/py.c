@@ -59,15 +59,15 @@ int print_temp_humidity () {
 	}
 	// Please no buffer overflow
 	int humidity_bit[8];
-	LIST_SEGMENT(humidity_bit, data, 0, 8);
+	LIST_SEGMENT(humidity_bit, data, 0, 8)
 	int humidity_point_bit[8];
-	LIST_SEGMENT(humidity_point_bit, data, 8, 16);
+	LIST_SEGMENT(humidity_point_bit, data, 8, 16)
 	int temperature_bit[8];
-	LIST_SEGMENT(temperature_bit, data, 16, 24);
+	LIST_SEGMENT(temperature_bit, data, 16, 24)
 	int temperature_point_bit[8];
-	LIST_SEGMENT(temperature_point_bit, data, 24, 32);
+	LIST_SEGMENT(temperature_point_bit, data, 24, 32)
 	int check_bit[8];
-	LIST_SEGMENT(check_bit, data, 32, 40);
+	LIST_SEGMENT(check_bit, data, 32, 40)
 	int humidity = 0;
 	int humidity_point = 0;
 	int temperature = 0;
