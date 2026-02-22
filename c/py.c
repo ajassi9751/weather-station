@@ -2,6 +2,7 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <wiringPi.h>
+#include "test.h"
 
 #define CHANNEL 17
 // This macro replicates the python y = x[0:1] syntax
@@ -89,3 +90,9 @@ int print_temp_humidity () {
 	}
 	// I dont think I need to clean up wiringPi
 }
+
+#if TEST == 1
+int main () {
+	print_temp_humidity();
+}
+#endif

@@ -6,7 +6,9 @@
 #define DHTPIN		17
 int dht11_dat[5] = { 0, 0, 0, 0, 0 };
  
-void read_dht11_dat()
+// Changed to prevent compiling conflicts
+// void read_dht11_dat()
+void read_dht11()
 {
 	uint8_t laststate	= HIGH;
 	uint8_t counter		= 0;
@@ -59,18 +61,19 @@ void read_dht11_dat()
 	}
 }
  
-int main( void )
-{
-	printf( "Raspberry Pi wiringPi DHT11 Temperature test program\n" );
- 
-	if ( wiringPiSetup() == -1 )
-		exit( 1 );
- 
-	while ( 1 )
-	{
-		read_dht11_dat();
-		delay( 1000 ); 
-	}
- 
-	return(0);
-}
+// Commented to prevent compiling issues
+// int main( void )
+// {
+// 	printf( "Raspberry Pi wiringPi DHT11 Temperature test program\n" );
+//
+// 	if ( wiringPiSetup() == -1 )
+// 		exit( 1 );
+//
+// 	while ( 1 )
+// 	{
+// 		read_dht11_dat();
+// 		delay( 1000 ); 
+// 	}
+//
+// 	return(0);
+// }

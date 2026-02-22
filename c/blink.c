@@ -1,6 +1,7 @@
 #include <wiringPi.h> // Include WiringPi library!
 #include <stdio.h>
 #include <unistd.h>
+#include "test.h"
 
 int blink () {
   // uses BCM numbering of the GPIOs and directly accesses the GPIO registers.
@@ -31,7 +32,9 @@ int blink () {
   }
 }
 
+#if TEST == 1
 int main()
 {
 	blink();
 }
+#endif

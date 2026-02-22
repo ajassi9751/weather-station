@@ -1,6 +1,7 @@
 #include <wiringPi.h> // Include WiringPi library!
 #include <stdio.h>
 #include <unistd.h>
+#include "test.h"
 
 #define PIN_NUMBER 17
 
@@ -32,7 +33,9 @@ void readPin () {
 	}
 }
 
+#if TEST == 1
 int main()
 {
 	readPin();
 }
+#endif
