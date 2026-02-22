@@ -1,7 +1,7 @@
 #include <math.h>
-#include<unistd.h>
-#include<stdio.h>
-#include<wiringPi.h>
+#include <unistd.h>
+#include <stdio.h>
+#include <wiringPi.h>
 
 #define CHANNEL 17
 // This macro replicates the python y = x[0:1] syntax
@@ -87,5 +87,5 @@ int print_temp_humidity () {
 		printf("wrong\n");
 		printf("temperature : %d, humidity : %d check : %d tmp : %d\n", temperature, humidity, check, tmp);
 	}
-	// I dont think I need to clean up
+	// I dont think I need to clean up wiringPi
 }
