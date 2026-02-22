@@ -3,7 +3,7 @@
 #include<stdio.h>
 #include<wiringPi.h>
 
-#define channel 17
+#define CHANNEL 17
 // This macro replicates the python y = x[0:1] syntax
 // It also keeps list1i in its own scope so it doesn't cause redefinition issues
 #define LIST_SEGMENT(list1, list2, range1, range2) {\
@@ -20,24 +20,24 @@ int print_temp_humidity () {
 	int j = 0;
 	int datai = 0;
 	setupWiringPiGpio();
-	sleep(1);
-	pinMode(channel, OUTPUT);
-	digitalWrite(channel, LOW);
+	sleep(1); // Maybe use delayMicroseconds
+	pinMode(CHANNEL, OUTPUT);
+	digitalWrite(CHANNEL, LOW);
 	delayMicroseconds(20000);
-	digitalWrite(channel, HIGH);
+	digitalWrite(CHANNEL, HIGH);
 	// pinMode(channel, INPUT);
-	while (digitalRead(channel)==LOW) {
+	while (digitalRead(CHANNEL)==LOW) {
 		continue;
 	}
-	while (digitalRead(channel)==HIGH) {
+	while (digitalRead(CHANNELL)==HIGH) {
 		continue;
 	}
 	while (j<40) {
 		int k = 0;
-		while (digitalRead(channel)==LOW) {
+		while (digitalRead(CHANNEL)==LOW) {
 			continue;
 		}
-		while (digitalRead(channel)==HIGH) {
+		while (digitalRead(CHANNEL)==HIGH) {
 			k++;
 			if (k>100)
 				break;
