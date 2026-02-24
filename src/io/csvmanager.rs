@@ -1,3 +1,4 @@
+use crate::c::ctime::get_c_time;
 use crate::io::csv::csv;
 use std::fs::write;
 use std::time::{SystemTime, UNIX_EPOCH};
@@ -10,6 +11,7 @@ pub struct csvmanager {
     // Manages adding times and creating weekly csvs, as well as file paths
     currentcsv: csv,     // Holds the current csv
     rowque: Vec<String>, // Holds info to be put into the row
+    csvname: String,
     date_of_last_made_csv: SystemTime, // Holds info about the system time to know when to change csvs
                                        // Should use a u64 for ease of use
 }
@@ -36,16 +38,18 @@ impl csvmanager {
         csvmanager {
             currentcsv: temp_csv,
             rowque: rowque,
+            csvname: "",
             date_of_last_made_csv: time,
         }
     }
     pub fn give_data<T: MatchIntoType>(&mut self, data: T) {
         let (value, position) = data.match_into_type();
-        if position > self.rowque.len() - 1 {
+        // Make sure position isn't out of the Vec or the last element (reserved for dates)
+        if position >= self.rowque.len() - 1 {
             // Check this
             return;
         }
-        if self.rowque[position] != "" {
+        if self.rowque[position] == "" {
             self.rowque[position] = value;
             self.try_to_write_row();
         }
@@ -56,13 +60,26 @@ impl csvmanager {
                 return;
             }
         }
-        let length = self.rowque.len();
+        self.rowque[self.rowque.len() - 1] = get_c_time();
         self.write_row();
+    }
+    fn write_row(&mut self) {
+        let length = self.rowque.len();
+        self.currentcsv.write_new_row(get_csv_name(), self.rowque);
         self.rowque = Vec::new();
         self.rowque.resize(length, String::from(""));
     }
-    fn write_row(&mut self) {}
-    fn try_change_date(&mut self) {}
+    fn get_csv_name(&mut self) -> &str {
+        if self.csvname == "" {
+            self.csvname = "";
+        } else {
+            self.csvname.as_str()
+        }
+        todo!()
+    }
+    fn try_change_date(&mut self) {
+        todo!()
+    }
 }
 
 pub trait MatchIntoType {
