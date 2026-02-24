@@ -11,6 +11,7 @@ pub struct csvmanager {
     // Manages adding times and creating weekly csvs, as well as file paths
     currentcsv: csv,     // Holds the current csv
     rowque: Vec<String>, // Holds info to be put into the row
+    // The next two are possibly not needed
     csvname: String,
     date_of_last_made_csv: SystemTime, // Holds info about the system time to know when to change csvs
                                        // Should use a u64 for ease of use
