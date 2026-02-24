@@ -38,10 +38,13 @@ impl csvmanager {
         csvmanager {
             currentcsv: temp_csv,
             rowque: rowque,
-            csvname: "",
+            csvname: String::from(""),
             date_of_last_made_csv: time,
         }
     }
+    // You can give data of any enum that implements the give_data trait
+    // This is potentially needed for multithreading
+    // Ensures data arrives in correct order with type saftey
     pub fn give_data<T: MatchIntoType>(&mut self, data: T) {
         let (value, position) = data.match_into_type();
         // Make sure position isn't out of the Vec or the last element (reserved for dates)
@@ -60,7 +63,9 @@ impl csvmanager {
                 return;
             }
         }
+        // Make the last element the time and date
         self.rowque[self.rowque.len() - 1] = get_c_time();
+        // Write the row
         self.write_row();
     }
     fn write_row(&mut self) {
@@ -70,12 +75,16 @@ impl csvmanager {
         self.rowque.resize(length, String::from(""));
     }
     fn get_csv_name(&mut self) -> &str {
+        // Maybe just always return this weeks monday instead of storing the filename
         if self.csvname == "" {
-            self.csvname = "";
+            // A file with the name of the date of this week's monday 
+            let today = Local::now().date_naive();
+            let days_since_monday = today.weekday().num_days_from_monday();
+            self.csvname = format!("{}.csv", today - Duration::days(days_since_monday as i64));
+            self.csvname.as_str()
         } else {
             self.csvname.as_str()
         }
-        todo!()
     }
     fn try_change_date(&mut self) {
         todo!()
