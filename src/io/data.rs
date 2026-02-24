@@ -6,12 +6,13 @@ enum Data {
     WindSpeed(f64),
 }
 
+// Consumes data to give to csvmanager
 impl MatchIntoType for Data {
     fn match_into_type(self) -> (String, usize) {
         match self {
             Self::Tempurature(v) => (format!("{}", v), 0),
-            Self::Humidity(v) => (format!("{}", v), 0),
-            Self::WindSpeed(v) => (format!("{}", v), 0),
+            Self::Humidity(v) => (format!("{}", v), 1),
+            Self::WindSpeed(v) => (format!("{}", v), 2),
         }
     }
 }
