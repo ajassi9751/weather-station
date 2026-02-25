@@ -81,6 +81,7 @@ impl csv {
     pub fn get_headers(&self) -> &vec<String> {
         &self.headers
     }
+    // Add a function to parse a csv ino the body, like parse_into_body
 }
 
 // Rust says that the struct is never constructed even though it is

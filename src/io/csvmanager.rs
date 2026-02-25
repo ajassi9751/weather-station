@@ -1,7 +1,6 @@
 use crate::c::ctime::get_c_time;
 use crate::io::csv::csv;
-use std::fs::write;
-use std::time::{SystemTime, UNIX_EPOCH};
+use std::fs::{read_to_string, write};
 
 const SECONDS_IN_A_WEEK: u32 = 604800; // 60*60*24*7
 const HOME_DIRECTORY: &str = "data/";
@@ -13,8 +12,6 @@ pub struct csvmanager {
     rowque: Vec<String>, // Holds info to be put into the row
     // The next two are possibly not needed
     prevcsvname: String,
-    date_of_last_made_csv: SystemTime, // Holds info about the system time to know when to change csvs
-                                       // Should use a u64 for ease of use
 }
 
 impl csvmanager {
@@ -23,25 +20,30 @@ impl csvmanager {
         let mut temp_csv = csv::new_default();
         let vecsize = headers.len();
         temp_csv.give_headers(headers);
-        let time = SystemTime::now();
-        write(
-            HOME_DIRECTORY.to_owned() + "csvmanager.txt",
-            format!(
-                "{}",
-                time.duration_since(UNIX_EPOCH)
-                    .expect("Error getting time")
-                    .as_secs()
-            ),
-        )
-        .expect("Error writing to file");
-        // Maybe don't use expect but this is at the beggining of the program anyway
+        let result = read_to_string(HOME_DIRECTORY.to_owned() + "csvmanager.txt");
+        let mut contents = String::from("");
+        let today = Local::now().date_naive();
+        let days_since_monday = today.weekday().num_days_from_monday();
+        let csvname = format!("{}", today - Duration::days(days_since_monday as i64));
+        match result {
+            Ok(v) => contents = v,
+            Err(_) => {
+                write(
+                    HOME_DIRECTORY.to_owned() + "csvmanager.txt",
+                    csvname).expect("Error writing to file");
+            }
+        }
+        if contents != "" {
+            if contents == csvname {
+                // Read the contents and parse them
+            }
+        }
         let mut rowque: Vec<String> = Vec::new();
         rowque.resize(vecsize, String::from(""));
         csvmanager {
             currentcsv: temp_csv,
             rowque: rowque,
             prevcsvname: String::from(""),
-            date_of_last_made_csv: time,
         }
     }
     // You can give data of any enum that implements the give_data trait
