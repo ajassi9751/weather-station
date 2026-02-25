@@ -2,6 +2,7 @@ use std::fs::read_to_string;
 use std::fs::write;
 
 #[allow(non_camel_case_types)]
+#[derive(Debug, Clone, Copy, PartialEq)]
 pub struct csv {
     headers: Vec<String>,   // Vec of strings is kind of sad
     body: Vec<Vec<String>>, // Vec of Vec of strings is even sadder

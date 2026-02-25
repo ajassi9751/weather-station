@@ -23,7 +23,7 @@ impl csvmanager {
         let mut contents = String::from("");
         let today = Local::now().date_naive();
         let days_since_monday = today.weekday().num_days_from_monday();
-        let csvname = format!("{}", today - Duration::days(days_since_monday as i64));
+        let csvname = format!("{}.csv", today - Duration::days(days_since_monday as i64));
         match result {
             Ok(v) => contents = v,
             Err(_) => {
@@ -34,7 +34,7 @@ impl csvmanager {
         }
         if contents != "" {
             if contents == csvname {
-                // self.currentcsv.parse_into_body()
+                self.currentcsv.parse_into_body(csvname.as_str())
                 // Read the contents and parse them
             }
         }
