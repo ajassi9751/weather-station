@@ -12,15 +12,16 @@ pub struct csvmanager {
     currentcsv: csv,     // Holds the current csv
     rowque: Vec<String>, // Holds info to be put into the row
     // The next two are possibly not needed
-    csvname: String,
+    prevcsvname: String,
     date_of_last_made_csv: SystemTime, // Holds info about the system time to know when to change csvs
                                        // Should use a u64 for ease of use
 }
 
 impl csvmanager {
-    pub fn new(mut headers: Vec<String>, vecsize: usize) -> csvmanager {
+    pub fn new(mut headers: Vec<String>) -> csvmanager {
         headers.push(String::from("Date and Time"));
         let mut temp_csv = csv::new_default();
+        let vecsize = headers.len();
         temp_csv.give_headers(headers);
         let time = SystemTime::now();
         write(
@@ -35,11 +36,11 @@ impl csvmanager {
         .expect("Error writing to file");
         // Maybe don't use expect but this is at the beggining of the program anyway
         let mut rowque: Vec<String> = Vec::new();
-        rowque.resize(vecsize + 1, String::from(""));
+        rowque.resize(vecsize, String::from(""));
         csvmanager {
             currentcsv: temp_csv,
             rowque: rowque,
-            csvname: String::from(""),
+            prevcsvname: String::from(""),
             date_of_last_made_csv: time,
         }
     }
@@ -76,19 +77,26 @@ impl csvmanager {
         self.rowque.resize(length, String::from(""));
     }
     fn get_csv_name(&mut self) -> &str {
-        // Maybe just always return this weeks monday instead of storing the filename
-        if self.csvname == "" {
+        let today = Local::now().date_naive();
+        let days_since_monday = today.weekday().num_days_from_monday();
+        let csvname = format!("{}.csv", today - Duration::days(days_since_monday as i64));
+        if self.prevcsvname == "" {
             // A file with the name of the date of this week's monday 
-            let today = Local::now().date_naive();
-            let days_since_monday = today.weekday().num_days_from_monday();
-            self.csvname = format!("{}.csv", today - Duration::days(days_since_monday as i64));
-            self.csvname.as_str()
-        } else {
-            self.csvname.as_str()
+            self.prevcsvname = csvname;
+            self.prevcsvname.as_str()
+        } else if self.prevcsvname != csvname {
+            self.prevcsvname = csvname;
+            self.change_csv();
+            self.prevcsvname.as_str()
+        }
+        else {
+            self.prevcsvname.as_str()
         }
     }
-    fn try_change_date(&mut self) {
-        todo!()
+    fn change_csv(&mut self) {
+        let headers = self.currentcsv.get_headers().clone();
+        self.currentcsv = csv::new_default();
+        self.currentcsv.give_headers(headers);
     }
 }
 

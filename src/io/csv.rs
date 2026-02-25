@@ -78,6 +78,9 @@ impl csv {
     pub fn new_row(&mut self, row: Vec<String>) {
         self.body.push(row);
     }
+    pub fn get_headers(&self) -> &vec<String> {
+        &self.headers
+    }
 }
 
 // Rust says that the struct is never constructed even though it is
