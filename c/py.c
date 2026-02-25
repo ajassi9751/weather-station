@@ -7,6 +7,11 @@
 #define CHANNEL 17
 // This macro replicates the python y = x[0:1] syntax
 // It also keeps list1i in its own scope so it doesn't cause redefinition issues
+// Enter the first array [y], then the second [x], then range1 [0], then range2 [1]
+// This will copy the defined range of elements from list2 into list1
+// This will not copy the last element so something like 0,0 wont copy anything
+// 0,1 will copy the first element
+// 0,8 will copy 8 elements but only until index 7
 #define LIST_SEGMENT(list1, list2, range1, range2) {\
 	int list1i = 0;\
 		for (int i = range1; i < range2 - 1; i++) {\
