@@ -10,7 +10,6 @@ pub struct csvmanager {
     // Manages adding times and creating weekly csvs, as well as file paths
     currentcsv: csv,     // Holds the current csv
     rowque: Vec<String>, // Holds info to be put into the row
-    // The next two are possibly not needed
     prevcsvname: String,
 }
 
@@ -35,6 +34,7 @@ impl csvmanager {
         }
         if contents != "" {
             if contents == csvname {
+                // self.currentcsv.parse_into_body()
                 // Read the contents and parse them
             }
         }
@@ -96,9 +96,7 @@ impl csvmanager {
         }
     }
     fn change_csv(&mut self) {
-        let headers = self.currentcsv.get_headers().clone();
-        self.currentcsv = csv::new_default();
-        self.currentcsv.give_headers(headers);
+        self.currentcsv.remove_body()
     }
 }
 

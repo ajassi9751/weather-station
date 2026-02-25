@@ -82,6 +82,46 @@ impl csv {
         &self.headers
     }
     // Add a function to parse a csv ino the body, like parse_into_body
+    pub fn parse_into_body(&mut self, file_path: &str) -> std::io::Result<i32> {
+        let file_contents = read_to_string(file_path)?;
+        let mut current_element: String = String::from("");
+        let mut current_vec: Vec<String> = Vec::new();
+        let mut body: Vec<Vec<String>> = Vec::new();
+        let mut headers: i32 = 0;
+        let mut is_first_row: bool = true;
+        for char in file_contents {
+            if is_first_row {
+                if char == "," {
+                    headers += 1;
+                }
+                else if char == "\n" {
+                    is_first_row = false;
+                    headers += 1;
+                }
+                else {
+                    continue;
+                }
+            }
+            else {
+                if char == ","{
+                    current_vec.push(current_element.clone());
+                    current_element = String::from("");
+                }
+                else if char == "\n" {
+                    body.push(current_vec.clone());
+                    current_vec = Vec::new();
+                }
+                else {
+                    current_element += char;
+                }
+            }
+        }
+        self.body = body;
+        Ok(headers)
+    }
+    pub fn remove_body(&mut self) {
+        self.body = Vec::new()
+    }
 }
 
 // Rust says that the struct is never constructed even though it is
