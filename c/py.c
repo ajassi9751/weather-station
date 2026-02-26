@@ -72,7 +72,13 @@ int print_temp_humidity () {
 	printf("sensor is working.\n");
 	// Print out the contents of data
 	for (int i = 0; i < datai-1; i++) {
-		printf("%d\n", data[i]);
+		// I think this works
+		if (i == datai-2) {
+			printf("%d\n", data[i]);
+		}
+		else {
+			printf("%d, ", data[i]);
+		}
 	}
 	// Please no buffer overflow
 	// Create 5 smaller lists that all hold different segments of the data list
