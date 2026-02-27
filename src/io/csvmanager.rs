@@ -1,7 +1,7 @@
 #[cfg(not(feature = "rust_only"))]
 use crate::c::ctime::get_c_time;
 use crate::io::csv::csv;
-use chrono::{Duration, Local};
+use chrono::{Duration, Local, Datelike};
 use std::fs::{read_to_string, write};
 
 const SECONDS_IN_A_WEEK: u32 = 604800; // 60*60*24*7
@@ -24,18 +24,21 @@ impl csvmanager {
         let result = read_to_string(HOME_DIRECTORY.to_owned() + "csvmanager.txt");
         let mut contents = String::from("");
         let today = Local::now().date_naive();
-        let days_since_monday = today.weekday().num_days_from_monday();
-        let csvname = format!("{}.csv", today - Duration::days(days_since_monday as i64));
+        let days_since_monday = today.weekday().num_days_from_monday() as i64;
+        let monday = today - Duration::days(days_since_monday);
+        let monday_str = monday.format("%Y-%m-%d").to_string();
+        let csvname = format!("{}.csv", monday_str); 
         match result {
             Ok(v) => contents = v,
             Err(_) => {
-                write(HOME_DIRECTORY.to_owned() + "csvmanager.txt", csvname)
+                write(HOME_DIRECTORY.to_owned() + "csvmanager.txt", &csvname)
                     .expect("Error writing to file");
             }
         }
         if contents != "" {
             if contents == csvname {
-                temp_csv.parse_into_body(csvname.as_str());
+                // Should use the result
+                let _ = temp_csv.parse_into_body(csvname.as_str());
                 // Read the contents and parse them
             }
         }
@@ -85,8 +88,9 @@ impl csvmanager {
     }
     fn get_csv_name(&mut self) -> &str {
         let today = Local::now().date_naive();
-        let days_since_monday = today.weekday().num_days_from_monday();
-        let csvname = format!("{}.csv", today - Duration::days(days_since_monday as i64));
+        let days_since_monday = today.weekday().num_days_from_monday() as i64;
+        let monday = today - Duration::days(days_since_monday);
+        let csvname = format!("{}.csv", monday.format("%Y-%m-%d").to_string());
         if self.prevcsvname == "" {
             // A file with the name of the date of this week's monday
             self.prevcsvname = csvname;
