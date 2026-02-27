@@ -90,25 +90,27 @@ impl csv {
         let mut body: Vec<Vec<String>> = Vec::new();
         let mut headers: i32 = 0;
         let mut is_first_row: bool = true;
-        for char in file_contents {
+        for char in file_contents.chars() {
             if is_first_row {
-                if char == "," {
+                if char == ',' {
                     headers += 1;
-                } else if char == "\n" {
+                } else if char == '\n' {
                     is_first_row = false;
                     headers += 1;
                 } else {
                     continue;
                 }
             } else {
-                if char == "," {
+                if char == ',' {
                     current_vec.push(current_element.clone());
                     current_element = String::from("");
-                } else if char == "\n" {
+                } else if char == '\n' {
                     body.push(current_vec.clone());
                     current_vec = Vec::new();
                 } else {
-                    current_element += char;
+                    // Idk if this works
+                    let mut buf = [0u8; 4];
+                    current_element += char.encode_utf8(&mut buf);
                 }
             }
         }

@@ -54,10 +54,12 @@ fn main() {
     // }
     // println!("Hello, world!");
     // println!("{}", c::add::add(1,2));
-    if !cfg!(feature = "rust_only") {
-        todo!()
+    #[cfg(not(feature = "rust_only"))]
+    {
+        c_tests()
     }
-    if !cfg!(feature = "no_pi") {
+    #[cfg(not(feature = "no_pi"))]
+    {
         wiring_pi();
     }
 }

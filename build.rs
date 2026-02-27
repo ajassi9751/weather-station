@@ -25,7 +25,8 @@ fn main() {
     }
     // Build::new().file("c/main.c").compile("main");
     // Only links to wiringPi if we are allowed to use a pi
-    if !cfg!(feature = "no_pi") {
+    #[cfg(not(feature = "no_pi"))]
+    {
         println!("cargo:rustc-link-search=native=/usr/local/lib");
         println!("cargo:rustc-link-lib=wiringPi");
     }
