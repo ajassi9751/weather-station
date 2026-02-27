@@ -5,6 +5,11 @@ You will need to have wiringPi installed to build this project\
 and because of this, the project only properly builds on a\
 raspberry pi
 
+However I have recently added a rust "feature" to compile without a raspberry pi\
+First change the TEST macro in test.h to being 0\
+Then change the the USE_PI macro in pi.h to 0\
+Then run cargo run or build with the flag --features "no_pi"
+
 To install wiringPi, grab their .deb file and run:\
 sudo apt install [filename]
 
