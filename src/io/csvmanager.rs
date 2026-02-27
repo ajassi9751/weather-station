@@ -69,15 +69,17 @@ impl csvmanager {
             }
         }
         // Make the last element the time and date
-        self.rowque[self.rowque.len() - 1] = get_c_time();
+        let rowque_index = self.rowque.len() - 1;
+        self.rowque[rowque_index] = get_c_time();
         // Write the row
         self.write_row();
     }
     fn write_row(&mut self) {
         let length = self.rowque.len();
-        let csvname = self.get_csv_name();
+        // Dumb heap allocation for no reason
+        let csvname = self.get_csv_name().to_owned();
         let rowque = self.rowque.clone();
-        self.currentcsv.write_new_row(csvname, rowque);
+        self.currentcsv.write_new_row(csvname.as_str(), rowque);
         self.rowque = Vec::new();
         self.rowque.resize(length, String::from(""));
     }
