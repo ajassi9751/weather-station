@@ -82,7 +82,8 @@ impl csvmanager {
         // Dumb heap allocation for no reason
         let csvname = self.get_csv_name().to_owned();
         let rowque = self.rowque.clone();
-        self.currentcsv.write_new_row(csvname.as_str(), rowque);
+        // Should use the result here
+        let _ = self.currentcsv.write_new_row(csvname.as_str(), rowque);
         self.rowque = Vec::new();
         self.rowque.resize(length, String::from(""));
     }

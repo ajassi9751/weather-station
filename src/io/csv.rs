@@ -122,6 +122,4 @@ impl csv {
     }
 }
 
-// Rust says that the struct is never constructed even though it is
-#[allow(unused)]
 pub struct IoError;
