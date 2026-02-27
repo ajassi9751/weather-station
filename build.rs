@@ -32,6 +32,12 @@ fn main() {
     }
 }
 
+// If c compilation is disabled, use this main
+#[cfg(feature = "rust_only")]
+fn main() {
+
+}
+
 #[cfg(not(feature = "rust_only"))]
 fn get_file_paths(filenames: &mut Vec<String>, path: &str) {
     match read_dir(path) {
