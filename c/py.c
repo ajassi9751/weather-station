@@ -1,3 +1,5 @@
+#include "pi.h"
+#if US_PI == 1
 #include <math.h>
 #include <unistd.h>
 #include <stdio.h>
@@ -124,4 +126,5 @@ int print_temp_humidity () {
 int main () {
 	print_temp_humidity();
 }
+#endif
 #endif

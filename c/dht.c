@@ -1,3 +1,5 @@
+#include "pi.h"
+#if US_PI == 1
 #include <wiringPi.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -60,6 +62,7 @@ void read_dht11()
 		printf( "Data not good, skip\n" );
 	}
 }
+#endif
  
 // Commented to prevent compiling issues
 // int main( void )

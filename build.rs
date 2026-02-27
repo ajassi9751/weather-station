@@ -1,9 +1,13 @@
+#[cfg(not(feature = "rust_only"))]
 use cc::Build;
+
 use std::fs::read_dir;
 use std::process::exit;
 
 // I wonder if there is a way to auto install wiringPi, that would be great
 
+// Only compiles if c code is allowed
+#[cfg(not(feature = "rust_only"))]
 fn main() {
     // unsafe {
     //     std::env::set_var("CFLAGS", "-l wiringPi");
@@ -20,10 +24,14 @@ fn main() {
         Build::new().file(src).compile(libname.as_str());
     }
     // Build::new().file("c/main.c").compile("main");
-    println!("cargo:rustc-link-search=native=/usr/local/lib");
-    println!("cargo:rustc-link-lib=wiringPi");
+    // Only links to wiringPi if we are allowed to use a pi
+    if !cfg!(feature = "no_pi") {
+        println!("cargo:rustc-link-search=native=/usr/local/lib");
+        println!("cargo:rustc-link-lib=wiringPi");
+    }
 }
 
+#[cfg(not(feature = "rust_only"))]
 fn get_file_paths(filenames: &mut Vec<String>, path: &str) {
     match read_dir(path) {
         Ok(entries) => {
@@ -56,6 +64,7 @@ fn get_file_paths(filenames: &mut Vec<String>, path: &str) {
     }
 }
 
+#[cfg(not(feature = "rust_only"))]
 fn get_file_names(filenames: &mut Vec<String>, path: &str) {
     match read_dir(path) {
         Ok(entries) => {
@@ -87,4 +96,3 @@ fn get_file_names(filenames: &mut Vec<String>, path: &str) {
         }
     }
 }
-

@@ -1,4 +1,7 @@
+// C functions
+#[cfg(not(feature = "rust_only"))]
 mod c;
+// Stuff for csvs
 mod io;
 // use dht_mmap_rust::{Dht, DhtType};
 use std::{thread, time};
@@ -51,11 +54,26 @@ fn main() {
     // }
     // println!("Hello, world!");
     // println!("{}", c::add::add(1,2));
+    if !cfg!(feature = "rust_only") {
+        todo!()
+    }
+    if !cfg!(feature = "no_pi") {
+        wiring_pi();
+    }
+}
+
+#[cfg(not(feature = "no_pi"))]
+fn wiring_pi() {
     c::dht11::setup_wiring_pi();
     loop {
         thread::sleep(time::Duration::from_millis(2000));
         c::dht11::read_dht11_dat();
     }
+}
+
+#[cfg(not(feature = "rust_only"))]
+fn c_tests() {
+    todo!()
 }
 
 // fn get_dht(pin: usize) -> Dht {

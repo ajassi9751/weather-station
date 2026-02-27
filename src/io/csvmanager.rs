@@ -1,5 +1,7 @@
+#[cfg(not(feature = "rust_only"))]
 use crate::c::ctime::get_c_time;
 use crate::io::csv::csv;
+use chrono::{Duration, Local};
 use std::fs::{read_to_string, write};
 
 const SECONDS_IN_A_WEEK: u32 = 604800; // 60*60*24*7
@@ -27,14 +29,13 @@ impl csvmanager {
         match result {
             Ok(v) => contents = v,
             Err(_) => {
-                write(
-                    HOME_DIRECTORY.to_owned() + "csvmanager.txt",
-                    csvname).expect("Error writing to file");
+                write(HOME_DIRECTORY.to_owned() + "csvmanager.txt", csvname)
+                    .expect("Error writing to file");
             }
         }
         if contents != "" {
             if contents == csvname {
-                self.currentcsv.parse_into_body(csvname.as_str())
+                temp_csv.parse_into_body(csvname.as_str());
                 // Read the contents and parse them
             }
         }
@@ -74,7 +75,9 @@ impl csvmanager {
     }
     fn write_row(&mut self) {
         let length = self.rowque.len();
-        self.currentcsv.write_new_row(get_csv_name(), self.rowque);
+        let csvname = self.get_csv_name();
+        let rowque = self.rowque.clone();
+        self.currentcsv.write_new_row(csvname, rowque);
         self.rowque = Vec::new();
         self.rowque.resize(length, String::from(""));
     }
@@ -83,15 +86,14 @@ impl csvmanager {
         let days_since_monday = today.weekday().num_days_from_monday();
         let csvname = format!("{}.csv", today - Duration::days(days_since_monday as i64));
         if self.prevcsvname == "" {
-            // A file with the name of the date of this week's monday 
+            // A file with the name of the date of this week's monday
             self.prevcsvname = csvname;
             self.prevcsvname.as_str()
         } else if self.prevcsvname != csvname {
             self.prevcsvname = csvname;
             self.change_csv();
             self.prevcsvname.as_str()
-        }
-        else {
+        } else {
             self.prevcsvname.as_str()
         }
     }

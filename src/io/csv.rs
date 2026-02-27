@@ -2,7 +2,7 @@ use std::fs::read_to_string;
 use std::fs::write;
 
 #[allow(non_camel_case_types)]
-#[derive(Debug, Clone, Copy, PartialEq)]
+#[derive(Debug, Clone, PartialEq)]
 pub struct csv {
     headers: Vec<String>,   // Vec of strings is kind of sad
     body: Vec<Vec<String>>, // Vec of Vec of strings is even sadder
@@ -18,10 +18,10 @@ impl csv {
         }
     }
     pub fn new(headers: Vec<String>, body: Vec<Vec<String>>) -> csv {
-         csv {
+        csv {
             headers: headers,
             body: body,
-        }       
+        }
     }
     pub fn give_headers(&mut self, headers: Vec<String>) {
         self.headers = headers;
@@ -79,7 +79,7 @@ impl csv {
     pub fn new_row(&mut self, row: Vec<String>) {
         self.body.push(row);
     }
-    pub fn get_headers(&self) -> &vec<String> {
+    pub fn get_headers(&self) -> &Vec<String> {
         &self.headers
     }
     // Add a function to parse a csv ino the body, like parse_into_body
@@ -94,25 +94,20 @@ impl csv {
             if is_first_row {
                 if char == "," {
                     headers += 1;
-                }
-                else if char == "\n" {
+                } else if char == "\n" {
                     is_first_row = false;
                     headers += 1;
-                }
-                else {
+                } else {
                     continue;
                 }
-            }
-            else {
-                if char == ","{
+            } else {
+                if char == "," {
                     current_vec.push(current_element.clone());
                     current_element = String::from("");
-                }
-                else if char == "\n" {
+                } else if char == "\n" {
                     body.push(current_vec.clone());
                     current_vec = Vec::new();
-                }
-                else {
+                } else {
                     current_element += char;
                 }
             }
@@ -128,4 +123,3 @@ impl csv {
 // Rust says that the struct is never constructed even though it is
 #[allow(unused)]
 pub struct IoError;
-

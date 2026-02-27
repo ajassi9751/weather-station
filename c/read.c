@@ -1,3 +1,5 @@
+#include "pi.h"
+#if US_PI == 1
 #include <wiringPi.h> // Include WiringPi library!
 #include <stdio.h>
 #include <unistd.h>
@@ -38,4 +40,5 @@ int main()
 {
 	readPin();
 }
+#endif
 #endif
