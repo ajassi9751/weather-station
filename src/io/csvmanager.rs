@@ -7,6 +7,11 @@ use std::fs::{read_to_string, write};
 const SECONDS_IN_A_WEEK: u32 = 604800; // 60*60*24*7
 const HOME_DIRECTORY: &str = "data/";
 
+#[cfg(feature = "rust_only")]
+fn get_c_time () -> String {
+    String::from("Disable the rust_only feature for dates to work")
+}
+
 #[allow(non_camel_case_types)]
 pub struct csvmanager {
     // Manages adding times and creating weekly csvs, as well as file paths
