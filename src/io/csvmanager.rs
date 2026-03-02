@@ -4,7 +4,6 @@ use crate::io::csv::csv;
 use chrono::{Duration, Local, Datelike};
 use std::fs::{read_to_string, write};
 
-const SECONDS_IN_A_WEEK: u32 = 604800; // 60*60*24*7
 const HOME_DIRECTORY: &str = "data/";
 
 #[cfg(feature = "rust_only")]
