@@ -4,3 +4,5 @@ target/
 *.csv
 // For compiled bianaries
 c/main
+// For csvmanager
+data/csvmanager.txt
