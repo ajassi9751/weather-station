@@ -75,7 +75,7 @@ fn wiring_pi() {
 
 #[cfg(not(feature = "rust_only"))]
 fn c_tests() {
-    todo!()
+    println!("C time: {}", c::ctime::get_c_time());
 }
 
 // fn get_dht(pin: usize) -> Dht {
