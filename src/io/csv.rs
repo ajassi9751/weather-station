@@ -120,5 +120,3 @@ impl csv {
         self.body = Vec::new()
     }
 }
-
-pub struct IoError;
