@@ -82,6 +82,9 @@ impl csv {
     pub fn get_headers(&self) -> &Vec<String> {
         &self.headers
     }
+    pub fn get_body(&self) -> &Vec<Vec<String>> {
+        &self.body
+    }
     // Add a function to parse a csv ino the body, like parse_into_body
     pub fn parse_into_body(&mut self, file_path: &str) -> std::io::Result<i32> {
         let file_contents = read_to_string(file_path)?;
