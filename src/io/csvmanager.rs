@@ -41,8 +41,12 @@ impl csvmanager {
         }
         if contents != "" {
             if contents == csvname {
-                // Should use the result
-                let _ = temp_csv.parse_into_body(csvname.as_str());
+                // If it cant read the file, just give it a default body to be safe
+                match temp_csv.parse_into_body(csvname.as_str()) {
+                    // Could use the given result here but idk how
+                    Ok(_) => {},
+                    Err(_) => temp_csv.give_body(Vec::new()),
+                }
                 // Read the contents and parse them
             }
         }
