@@ -29,7 +29,7 @@ impl csv {
     pub fn give_body(&mut self, body: Vec<Vec<String>>) {
         self.body = body;
     }
-    pub fn save_to_file(&self, file_path: &str) -> Result<(), IoError> {
+    pub fn save_to_file(&self, file_path: &str) -> std::io::Result<()> {
         let mut contents: String = String::from("");
         for header in &self.headers {
             // The reason I don't add the commas after is because it will mess it up at the end of
@@ -53,12 +53,8 @@ impl csv {
             }
             contents = contents + "\n";
         }
-        match write(file_path, contents) {
-            Ok(()) => return Ok(()),
-            Err(_e) => {
-                return Err(IoError {});
-            }
-        }
+        write(file_path, contents)?;
+        Ok(())
     }
     pub fn write_new_row(&mut self, file_path: &str, row: Vec<String>) -> std::io::Result<()> {
         let file_contents = read_to_string(file_path)?;
