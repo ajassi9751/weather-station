@@ -77,14 +77,3 @@ fn wiring_pi() {
 fn c_tests() {
     println!("C time: {}", c::ctime::get_c_time());
 }
-
-// fn get_dht(pin: usize) -> Dht {
-//     match Dht::new(DhtType::Dht11, pin) {
-//         Ok(v) => v,
-//         Err(_e) => {
-//             println!("Error accessing dht");
-//             thread::sleep(time::Duration::from_millis(1000));
-//             get_dht(pin)
-//         }
-//     }
-// }
