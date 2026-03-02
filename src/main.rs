@@ -3,7 +3,7 @@
 mod c;
 // Stuff for csvs
 mod io;
-// use dht_mmap_rust::{Dht, DhtType};
+// Used for multithreading
 use std::{thread, time};
 // We basically have a rust storage backend for managing data but tons of c code for interacting with sensors and wiringPi
 // To individually compile a c file that uses wiringPi make sure to use the -l wiringPi flag
@@ -27,33 +27,6 @@ fn main() {
         "data/my.csv",
         vec![String::from("really"), String::from("really")],
     );
-    // let pi = wiringpi::setup();
-    // let pin = pi.input_pin(6);
-    // loop {
-    //     thread::sleep(time::Duration::from_millis(2000));
-    //     let value = pin.digital_read();
-    //     match value {
-    //         High => {println!("High");},
-    //         Low => {println!("Low");},
-    //     }
-    // }
-    // The sensor is a DHT11 connected on pin 23
-    // let mut dht = get_dht(11);
-
-    // Important: DHT sensor reads fail sometimes. In an actual program, if a read fails you should retry multiple times until
-    // the read succeeds.
-    // For more information, see documentation on `read()`
-    // loop {
-    // let reading = dht.read().expect("Failed to read dht");
-
-    // println!(
-    //     "Temperature {} °C, Humidity {}%RH",
-    //     reading.temperature(),
-    //     reading.humidity()
-    // );
-    // }
-    // println!("Hello, world!");
-    // println!("{}", c::add::add(1,2));
     #[cfg(not(feature = "rust_only"))]
     {
         c_tests()
@@ -75,5 +48,6 @@ fn wiring_pi() {
 
 #[cfg(not(feature = "rust_only"))]
 fn c_tests() {
+    // println!("{}", c::add::add(1,2));
     println!("C time: {}", c::ctime::get_c_time());
 }
