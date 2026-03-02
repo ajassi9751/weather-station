@@ -32,6 +32,8 @@ fn main() {
     let headers:Vec<String> = vec![String::from("Temp"), String::from("Hum"), String::from("Speed")];
     let mut csvman = csvmanager::new(headers);
     csvman.give_data(io::data::Data::Tempurature(100.1));
+    csvman.give_data(io::data::Data::Humidity(100.1));
+    csvman.give_data(io::data::Data::WindSpeed(100.1));
     #[cfg(not(feature = "rust_only"))]
     {
         c_tests()

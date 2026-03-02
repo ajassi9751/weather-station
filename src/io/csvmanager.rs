@@ -59,6 +59,7 @@ impl csvmanager {
     // This is potentially needed for multithreading
     // Ensures data arrives in correct order with type saftey
     pub fn give_data<T: MatchIntoType>(&mut self, data: T) {
+        // I love this syntax
         let (value, position) = data.match_into_type();
         // Make sure position isn't out of the Vec or the last element (reserved for dates)
         if position >= self.rowque.len() - 1 {
