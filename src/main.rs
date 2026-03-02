@@ -5,6 +5,8 @@ mod c;
 mod io;
 // Used for multithreading
 use std::{thread, time};
+
+use crate::io::csvmanager::csvmanager;
 // We basically have a rust storage backend for managing data but tons of c code for interacting with sensors and wiringPi
 // To individually compile a c file that uses wiringPi make sure to use the -l wiringPi flag
 
@@ -27,6 +29,9 @@ fn main() {
         "data/my.csv",
         vec![String::from("really"), String::from("really")],
     );
+    let headers:Vec<String> = vec![String::from("Temp"), String::from("Hum"), String::from("Speed")];
+    let mut csvman = csvmanager::new(headers);
+    csvman.give_data(io::data::Data::Tempurature(100.1));
     #[cfg(not(feature = "rust_only"))]
     {
         c_tests()

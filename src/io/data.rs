@@ -1,6 +1,6 @@
 use crate::io::csvmanager::MatchIntoType;
 
-enum Data {
+pub enum Data {
     Tempurature(f64),
     Humidity(f64),
     WindSpeed(f64),
