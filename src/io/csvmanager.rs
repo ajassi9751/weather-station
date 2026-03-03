@@ -71,17 +71,22 @@ impl csvmanager {
         }
         if self.rowque[position] == "" {
             self.rowque[position] = value;
+            println!("{:?}", self.rowque);
             self.try_to_write_row();
         }
     }
     fn try_to_write_row(&mut self) {
-        for string in &self.rowque {
+        for (i, string) in self.rowque.iter().enumerate() {
+            // Last element should be ""
+            if i == self.rowque.len()-1 {
+                break;
+            }
             if string == "" {
                 return;
             }
         }
         // Make the last element the time and date
-        let rowque_index = self.rowque.len() - 1;
+        let rowque_index: usize = self.rowque.len() - 1;
         self.rowque[rowque_index] = get_c_time();
         // Write the row
         self.write_row();
