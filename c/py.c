@@ -25,7 +25,7 @@
 
 // The sensor seems to give us a 40 bit bianary sequence which we decode in 8 bit segments into 5 numbers
 // The last number that we get should be equal all the others combined so it serves as a check
-int print_temp_humidity () {
+void print_temp_humidity () {
 	printf("Start\n");
 	int data[100];
 	int j = 0;

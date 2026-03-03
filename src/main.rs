@@ -50,6 +50,7 @@ fn wiring_pi() {
     loop {
         thread::sleep(time::Duration::from_millis(2000));
         c::dht11::read_dht11_dat();
+        c::py::print_temp_humidity();
     }
 }
 
