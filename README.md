@@ -23,3 +23,14 @@ cargo run
 The build.rs file does all the heavy lifting of compiling c code and linking for you
 
 Note: This project is unstable currently so builds may fail sometimes
+
+Experimental: I recently added a flake.nix so that now this project can be built with nix\
+To run do:
+```Bash
+nix run
+```
+To enter a development shell do:
+```Bash
+nix develop
+```
+If these dont work, make sure your nix-daemon is set up correctly

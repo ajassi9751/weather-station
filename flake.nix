@@ -17,7 +17,7 @@
     };
     runArm = pkgs.writeShellApplication {
       name = "runArm";
-      runtimeInputs = with pkgs; [ cargo rustc ];
+      runtimeInputs = with pkgs; [ cargo rustc wiringpi ];
       text = ''
         ${pkgs.cargo}/bin/cargo run
       '';
@@ -47,12 +47,16 @@
       type = "app";
     };
 
+    # Use for raspberry pi
+    packages.arm-linux.default = pkgs.writeShellScriptBin "default" ''
+      ${pkgs.cargo}/bin/cargo build
+    ''; 
+
     apps.arm-linux.default = {
       program = "${runArm}/bin/runArm";
       type = "app";
     };
 
-    # Use for raspberry pi
     devShells.arm-linux.default = pkgs.mkShell {
       # Starts zsh as the default shell
       shellHook = ''

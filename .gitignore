@@ -8,4 +8,4 @@ c/main
 data/csvmanager.txt
 
 # For the nix folder that gets created
-default
+result
