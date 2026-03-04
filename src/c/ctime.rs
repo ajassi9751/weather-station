@@ -21,7 +21,9 @@ pub fn get_c_time() -> String {
         if result_ptr.is_null() {
             String::from("Invalid Time")
         } else {
-            CStr::from_ptr(result_ptr).to_string_lossy().into_owned()
+            let mut temp = CStr::from_ptr(result_ptr).to_string_lossy().into_owned();
+            let _ = temp.pop();
+            temp
         }
     }
 }

@@ -71,6 +71,7 @@ impl csv {
                 is_first_iter = false;
             }
         }
+        contents += "\n";
         write(file_path, contents)?;
         Ok(())
     }
