@@ -6,7 +6,8 @@
   };
 
   outputs = { self, nixpkgs }: let
-    pkgs = nixpkgs.legacyPackages.x86_64-linux; # Adjust system if needed
+    pkgs = nixpkgs.legacyPackages.x86_64-linux;
+    armpkgs = nixpkgs.legacyPackages.arm-linux;
   in {
     devShells.x86_64-linux.default = pkgs.mkShell {
       # Starts zsh as the default shell
@@ -17,7 +18,23 @@
         rustc
         cargo
         rustfmt
+        rust-analyzer
         zsh
+      ];
+    };
+    # Use for raspberry pi
+    devShells.arm-linux.default = pkgs.mkShell {
+      # Starts zsh as the default shell
+      shellHook = ''
+        exec zsh
+      '';
+      buildInputs = with armpkgs; [
+        rustc
+        cargo
+        rustfmt
+        rust-analyzer
+        zsh
+        wiringpi
       ];
     };
   };

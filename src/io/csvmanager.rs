@@ -2,7 +2,7 @@
 use crate::c::ctime::get_c_time;
 use crate::io::csv::csv;
 use chrono::{Duration, Local, Datelike};
-use std::fs::{read_to_string, write};
+use std::{env::home_dir, fs::{read_to_string, write}};
 
 const HOME_DIRECTORY: &str = "data/";
 
@@ -39,10 +39,11 @@ impl csvmanager {
                     .expect("Error writing to file");
             }
         }
+        println!("contents: {}, csvname: {}", contents, csvname);
         if contents != "" {
             if contents == csvname {
                 // If it cant read the file, just give it a default body to be safe
-                match temp_csv.parse_into_body(csvname.as_str()) {
+                match temp_csv.parse_into_body(format!("{}{}", HOME_DIRECTORY, csvname).as_str()) {
                     // Could use the given result here but idk how
                     Ok(_) => {},
                     Err(_) => temp_csv.give_body(Vec::new()),
@@ -92,10 +93,12 @@ impl csvmanager {
         self.write_row();
     }
     fn write_row(&mut self) {
+        println!("writing row");
         let length = self.rowque.len();
         // Dumb heap allocation for no reason
         let csvname = self.get_csv_name().to_owned();
         let rowque = self.rowque.clone();
+        println!("Rowque:\n{:?}", rowque);
         // Should use the result here
         let _ = self.currentcsv.write_new_row(csvname.as_str(), rowque);
         self.rowque = Vec::new();

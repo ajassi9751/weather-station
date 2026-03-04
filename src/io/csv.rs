@@ -83,7 +83,10 @@ impl csv {
     }
     // Add a function to parse a csv ino the body, like parse_into_body
     pub fn parse_into_body(&mut self, file_path: &str) -> std::io::Result<i32> {
+        println!("parse_into_body called!");
+        println!("file_path: {}", file_path);
         let file_contents = read_to_string(file_path)?;
+        println!("file contents:\n{}", file_contents);
         let mut current_element: String = String::from("");
         let mut current_vec: Vec<String> = Vec::new();
         let mut body: Vec<Vec<String>> = Vec::new();
