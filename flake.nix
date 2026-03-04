@@ -9,10 +9,15 @@
     pkgs = nixpkgs.legacyPackages.x86_64-linux; # Adjust system if needed
   in {
     devShells.x86_64-linux.default = pkgs.mkShell {
+      # Starts zsh as the default shell
+      shellHook = ''
+        exec zsh
+      '';
       buildInputs = with pkgs; [
         rustc
         cargo
         rustfmt
+        zsh
       ];
     };
   };
