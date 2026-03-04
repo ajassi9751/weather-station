@@ -57,7 +57,9 @@ impl csv {
         Ok(())
     }
     pub fn write_new_row(&mut self, file_path: &str, row: Vec<String>) -> std::io::Result<()> {
+        println!("File path: {}", file_path);
         let file_contents = read_to_string(file_path)?;
+        println!("Completed read");
         let mut contents = file_contents;
         let mut is_first_iter = true;
         self.body.push(row.clone());

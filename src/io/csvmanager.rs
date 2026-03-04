@@ -2,7 +2,7 @@
 use crate::c::ctime::get_c_time;
 use crate::io::csv::csv;
 use chrono::{Duration, Local, Datelike};
-use std::{env::home_dir, fs::{read_to_string, write}};
+use std::{fs::{read_to_string, write}};
 
 const HOME_DIRECTORY: &str = "data/";
 
@@ -108,7 +108,7 @@ impl csvmanager {
         let today = Local::now().date_naive();
         let days_since_monday = today.weekday().num_days_from_monday() as i64;
         let monday = today - Duration::days(days_since_monday);
-        let csvname = format!("{}.csv", monday.format("%Y-%m-%d").to_string());
+        let csvname = format!("{}{}.csv", HOME_DIRECTORY, monday.format("%Y-%m-%d").to_string());
         if self.prevcsvname == "" {
             // A file with the name of the date of this week's monday
             self.prevcsvname = csvname;

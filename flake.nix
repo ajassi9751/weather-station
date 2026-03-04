@@ -1,5 +1,5 @@
 {
-  description = "Code for the GHSweather station for the geo/yci club";
+  description = "Nix flake for the GHSweather station for the geo/yci club";
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
