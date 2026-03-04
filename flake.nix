@@ -10,9 +10,16 @@
     armpkgs = nixpkgs.legacyPackages.arm-linux;
     run64 = pkgs.writeShellApplication {
       name = "run64";
-      runtimeInputs = with pkgs; [ cowsay ];
+      runtimeInputs = with pkgs; [ cargo rustc ];
       text = ''
-        ${pkgs.cowsay}/bin/cowsay "Hi from nix run"
+        ${pkgs.cargo}/bin/cargo run --features "no_pi"
+      '';
+    };
+    runArm = pkgs.writeShellApplication {
+      name = "runArm";
+      runtimeInputs = with pkgs; [ cargo rustc ];
+      text = ''
+        ${pkgs.cargo}/bin/cargo run
       '';
     };
   in {
@@ -30,12 +37,18 @@
       ];
     };
  
+    # This definitely doesnt work becuase it should've failed when compiling for arm but it didn't
     packages.x86_64-linux.default = pkgs.writeShellScriptBin "default" ''
-      ${pkgs.cowsay}/bin/cowsay "Hello from a Nix build!"
+      ${pkgs.cargo}/bin/cargo build --features "no_pi"
     '';
 
     apps.x86_64-linux.default = {
       program = "${run64}/bin/run64";
+      type = "app";
+    };
+
+    apps.arm-linux.default = {
+      program = "${runArm}/bin/runArm";
       type = "app";
     };
 

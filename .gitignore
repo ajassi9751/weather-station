@@ -1,8 +1,11 @@
-// Default rust ignore
+# Default rust ignore
 target/
-// For test csv files
+# For test csv files
 *.csv
-// For compiled bianaries
+# For compiled bianaries
 c/main
-// For csvmanager
+# For csvmanager
 data/csvmanager.txt
+
+# For the nix folder that gets created
+default
