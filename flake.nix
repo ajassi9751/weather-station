@@ -17,7 +17,7 @@
     };
     runArm = pkgs.writeShellApplication {
       name = "runArm";
-      runtimeInputs = with pkgs; [ cargo rustc wiringpi ];
+      runtimeInputs = with armpkgs; [ cargo rustc wiringpi ];
       text = ''
         ${pkgs.cargo}/bin/cargo run
       '';
