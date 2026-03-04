@@ -96,7 +96,7 @@ impl csv {
         let mut headers: i32 = 0;
         let mut is_first_row: bool = true;
         for char in file_contents.chars() {
-            println!("{}", char);
+            // println!("{}", char);
             if is_first_row {
                 if char == ',' {
                     headers += 1;
