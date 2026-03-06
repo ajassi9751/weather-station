@@ -33,4 +33,5 @@ To enter a development shell do:
 ```Bash
 nix develop
 ```
-If these dont work, make sure your nix-daemon is set up correctly
+If these dont work, make sure your nix-daemon is set up correctly\
+Nix should take care of feature flags and dependencies (like wiringPi) for you!
