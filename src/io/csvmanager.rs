@@ -2,7 +2,7 @@
 use crate::c::ctime::get_c_time;
 use crate::io::csv::csv;
 use chrono::{Duration, Local, Datelike};
-use std::{fs::{read_to_string, write}};
+use std::fs::{read_to_string, write};
 
 const HOME_DIRECTORY: &str = "data/";
 
@@ -20,6 +20,11 @@ pub struct csvmanager {
 }
 
 impl csvmanager {
+    // Creates a new csvmanager based on the headers you give it
+    // It tries to read from a csvmanager.txt which gives it info about the last week the program was active
+    // If that week is this week then it recovers the weeks file
+    // If that fails it just ignores it and moves on as it will auto create the file later on
+    // If the weeks don't match, it writes this week to the manager file
     pub fn new(mut headers: Vec<String>) -> csvmanager {
         headers.push(String::from("Date and Time"));
         let mut temp_csv = csv::new_default();
@@ -43,16 +48,17 @@ impl csvmanager {
         {
             println!("contents: {}, csvname: {}", contents, csvname);
         }
-        if contents != "" {
-            if contents == csvname {
-                // If it cant read the file, just give it a default body to be safe
-                match temp_csv.parse_into_body(format!("{}{}", HOME_DIRECTORY, csvname).as_str()) {
-                    // Could use the given result here but idk how
-                    Ok(_) => {},
-                    Err(_) => temp_csv.give_body(Vec::new()),
-                }
-                // Read the contents and parse them
+        if contents == csvname {
+            // If it cant read the file, just give it a default body to be safe
+            match temp_csv.parse_into_body(format!("{}{}", HOME_DIRECTORY, csvname).as_str()) {
+                Ok(_) => {},
+                Err(_) => temp_csv.give_body(Vec::new()),
             }
+            // Read the contents and parse them
+        }
+        else { // Write the this week to othe file
+            write(HOME_DIRECTORY.to_owned() + "csvmanager.txt", &csvname)
+                .expect("Error writing to file");
         }
         let mut rowque: Vec<String> = Vec::new();
         rowque.resize(vecsize, String::from(""));
@@ -65,6 +71,8 @@ impl csvmanager {
     // You can give data of any enum that implements the give_data trait
     // This is potentially needed for multithreading
     // Ensures data arrives in correct order with type saftey
+    // This is the main function that users will interact with
+    // Makes it easy to just shove whatever data in here and it handles the rest
     pub fn give_data<T: MatchIntoType>(&mut self, data: T) {
         // I love this syntax
         let (value, position) = data.match_into_type();
@@ -82,6 +90,8 @@ impl csvmanager {
             self.try_to_write_row();
         }
     }
+    // Tries to write a row by checking if any spaces are empty
+    // If its valid, it adds the data and time and calls the write function
     fn try_to_write_row(&mut self) {
         for (i, string) in self.rowque.iter().enumerate() {
             // Last element should be ""
@@ -98,6 +108,7 @@ impl csvmanager {
         // Write the row
         self.write_row();
     }
+    // Does some cloning to write the new row and cleans up rowque
     fn write_row(&mut self) {
         #[cfg(debug_assertions)]
         {
@@ -116,6 +127,8 @@ impl csvmanager {
         self.rowque = Vec::new();
         self.rowque.resize(length, String::from(""));
     }
+    // Gets the name of the csv right now
+    // Changes the csv if needed but idk if that should be done here
     fn get_csv_name(&mut self) -> &str {
         let today = Local::now().date_naive();
         let days_since_monday = today.weekday().num_days_from_monday() as i64;
@@ -127,14 +140,18 @@ impl csvmanager {
             self.prevcsvname.as_str()
         } else if self.prevcsvname != csvname {
             self.prevcsvname = csvname;
+            // Idk if this should be done here
             self.change_csv();
             self.prevcsvname.as_str()
         } else {
             self.prevcsvname.as_str()
         }
     }
+    // Changes to a "new" csv by removing th ebody of it and writing to csvmanager.txt
     fn change_csv(&mut self) {
-        self.currentcsv.remove_body()
+        self.currentcsv.remove_body();
+        write(HOME_DIRECTORY.to_owned() + "csvmanager.txt", self.prevcsvname.as_str())
+            .expect("Error writing to file");
     }
 }
 

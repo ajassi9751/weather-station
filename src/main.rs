@@ -6,7 +6,8 @@ mod io;
 // Used for multithreading
 use std::{thread, time};
 
-use crate::io::csvmanager::csvmanager;
+// Manages files and has the Data type
+use crate::io::{csvmanager::csvmanager, data::Data};
 // We basically have a rust storage backend for managing data but tons of c code for interacting with sensors and wiringPi
 // To individually compile a c file that uses wiringPi make sure to use the -l wiringPi flag
 
@@ -23,7 +24,7 @@ fn main() {
         vec![String::from("Nice"), String::from("and Cool")],
         vec![String::from("Really"), String::from("Cool")],
     ];
-    let mut mycsv = io::csv::csv::new(headers, body);
+    let mut mycsv = crate::io::csv::csv::new(headers, body);
     let _ = mycsv.save_to_file("data/my.csv");
     let _ = mycsv.write_new_row(
         "data/my.csv",
@@ -31,9 +32,9 @@ fn main() {
     );
     let headers:Vec<String> = vec![String::from("Temp"), String::from("Hum"), String::from("Speed")];
     let mut csvman = csvmanager::new(headers);
-    csvman.give_data(io::data::Data::Tempurature(100.1));
-    csvman.give_data(io::data::Data::Humidity(100.1));
-    csvman.give_data(io::data::Data::WindSpeed(100.1));
+    csvman.give_data(Data::Tempurature(100.1));
+    csvman.give_data(Data::Humidity(100.1));
+    csvman.give_data(Data::WindSpeed(100.1));
     #[cfg(not(feature = "rust_only"))]
     {
         c_tests()
