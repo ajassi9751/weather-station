@@ -39,7 +39,10 @@ impl csvmanager {
                     .expect("Error writing to file");
             }
         }
-        println!("contents: {}, csvname: {}", contents, csvname);
+        #[cfg(debug_assertions)]
+        {
+            println!("contents: {}, csvname: {}", contents, csvname);
+        }
         if contents != "" {
             if contents == csvname {
                 // If it cant read the file, just give it a default body to be safe
@@ -72,7 +75,10 @@ impl csvmanager {
         }
         if self.rowque[position] == "" {
             self.rowque[position] = value;
-            println!("{:?}", self.rowque);
+            #[cfg(debug_assertions)]
+            {
+                println!("{:?}", self.rowque);
+            }
             self.try_to_write_row();
         }
     }
@@ -93,12 +99,18 @@ impl csvmanager {
         self.write_row();
     }
     fn write_row(&mut self) {
-        println!("writing row");
+        #[cfg(debug_assertions)]
+        {
+            println!("writing row");
+        }
         let length = self.rowque.len();
         // Dumb heap allocation for no reason
         let csvname = self.get_csv_name().to_owned();
         let rowque = self.rowque.clone();
-        println!("Rowque:\n{:?}", rowque);
+        #[cfg(debug_assertions)]
+        {
+            println!("Rowque:\n{:?}", rowque);
+        }
         // Should use the result here
         let _ = self.currentcsv.write_new_row(csvname.as_str(), rowque);
         self.rowque = Vec::new();

@@ -56,6 +56,9 @@ fn wiring_pi() {
 
 #[cfg(not(feature = "rust_only"))]
 fn c_tests() {
-    // println!("{}", c::add::add(1,2));
-    println!("C time: {}", c::ctime::get_c_time());
+    #[cfg(debug_assertions)]
+    {
+        // println!("{}", c::add::add(1,2));
+        println!("C time: {}", c::ctime::get_c_time());
+    }
 }
