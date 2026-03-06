@@ -150,6 +150,7 @@ impl csvmanager {
     // Changes to a "new" csv by removing th ebody of it and writing to csvmanager.txt
     fn change_csv(&mut self) {
         self.currentcsv.remove_body();
+        // Maybe don't use .expect becuase this runs every week and could lead to data loss upon restart
         write(HOME_DIRECTORY.to_owned() + "csvmanager.txt", self.prevcsvname.as_str())
             .expect("Error writing to file");
     }
