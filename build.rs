@@ -4,14 +4,26 @@ use cc::Build;
 use std::fs::read_dir;
 use std::process::exit;
 
-// I wonder if there is a way to auto install wiringPi, that would be great
+#[cfg(feature = "no_pi")]
+use std::fs::write;
 
+// I wonder if there is a way to auto install wiringPi, that would be great
 // Only compiles if c code is allowed
 #[cfg(not(feature = "rust_only"))]
 fn main() {
     // unsafe {
     //     std::env::set_var("CFLAGS", "-l wiringPi");
     // }
+    #[cfg(feature = "no_pi")]
+    {
+        write("c/test.h",
+            "// Make TEST 1 to enable main functions in code, this wont allow rust to compile though\n// Make it 0 to get rid of main functions in code so rust can compile\n#ifndef TESTH\n#define TESTH\n#define TEST 0\n#endif"
+        ).expect("Couldn't write to c/test.h");
+        write(
+            "c/pi.h",
+            "// Allows compiling c code that relies on wiringPi if USE_PI is set to 1\n#ifndef PI\n#define PI\n#define USE_PI 0\n#endif",
+        ).expect("Couldn't write to c/pi.h");
+    }
     let mut filenames: Vec<String> = Vec::new();
     get_file_paths(&mut filenames, "c/");
     let mut compilenames: Vec<String> = Vec::new();
@@ -34,9 +46,7 @@ fn main() {
 
 // If c compilation is disabled, use this main
 #[cfg(feature = "rust_only")]
-fn main() {
-
-}
+fn main() {}
 
 #[cfg(not(feature = "rust_only"))]
 fn get_file_paths(filenames: &mut Vec<String>, path: &str) {
