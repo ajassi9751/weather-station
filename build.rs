@@ -1,11 +1,8 @@
 #[cfg(not(feature = "rust_only"))]
 use cc::Build;
 
-use std::fs::read_dir;
+use std::fs::{read_dir, write};
 use std::process::exit;
-
-#[cfg(feature = "no_pi")]
-use std::fs::write;
 
 // I wonder if there is a way to auto install wiringPi, that would be great
 // Only compiles if c code is allowed
@@ -14,6 +11,7 @@ fn main() {
     // unsafe {
     //     std::env::set_var("CFLAGS", "-l wiringPi");
     // }
+    // Handle setting c macros based on features
     #[cfg(feature = "no_pi")]
     {
         write("c/test.h",
@@ -22,6 +20,16 @@ fn main() {
         write(
             "c/pi.h",
             "// Allows compiling c code that relies on wiringPi if USE_PI is set to 1\n#ifndef PI\n#define PI\n#define USE_PI 0\n#endif\n",
+        ).expect("Couldn't write to c/pi.h");
+    }
+    #[cfg(not(feature = "no_pi"))]
+    {
+        write("c/test.h",
+            "// Make TEST 1 to enable main functions in code, this wont allow rust to compile though\n// Make it 0 to get rid of main functions in code so rust can compile\n#ifndef TESTH\n#define TESTH\n#define TEST 0\n#endif\n"
+        ).expect("Couldn't write to c/test.h");
+        write(
+            "c/pi.h",
+            "// Allows compiling c code that relies on wiringPi if USE_PI is set to 1\n#ifndef PI\n#define PI\n#define USE_PI 1\n#endif\n",
         ).expect("Couldn't write to c/pi.h");
     }
     let mut filenames: Vec<String> = Vec::new();
