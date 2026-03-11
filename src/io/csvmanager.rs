@@ -81,7 +81,7 @@ impl csvmanager {
             // Check this
             return;
         }
-        if self.rowque[position] == "" {
+        if self.rowque[position].is_empty() {
             self.rowque[position] = value;
             #[cfg(debug_assertions)]
             {
@@ -98,7 +98,7 @@ impl csvmanager {
             if i == self.rowque.len()-1 {
                 break;
             }
-            if string == "" {
+            if string.is_empty() {
                 return;
             }
         }
@@ -133,8 +133,8 @@ impl csvmanager {
         let today = Local::now().date_naive();
         let days_since_monday = today.weekday().num_days_from_monday() as i64;
         let monday = today - Duration::days(days_since_monday);
-        let csvname = format!("{}{}.csv", HOME_DIRECTORY, monday.format("%Y-%m-%d").to_string());
-        if self.prevcsvname == "" {
+        let csvname = format!("{}{}.csv", HOME_DIRECTORY, monday.format("%Y-%m-%d"));
+        if self.prevcsvname.is_empty() {
             // A file with the name of the date of this week's monday
             self.prevcsvname = csvname;
             self.prevcsvname.as_str()

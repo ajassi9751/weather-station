@@ -34,24 +34,24 @@ impl csv {
         for header in &self.headers {
             // The reason I don't add the commas after is because it will mess it up at the end of
             // a row
-            if !(contents == "") {
+            if !contents.is_empty() {
                 contents = contents + "," + header.as_str();
             } else {
-                contents = contents + header.as_str();
+                contents += header.as_str();
             }
         }
-        contents = contents + "\n";
+        contents += "\n";
         for i in &self.body {
             let mut is_first_iter = true;
             for v in i {
                 if !is_first_iter {
                     contents = contents + "," + v.as_str();
                 } else {
-                    contents = contents + v.as_str();
+                    contents += v.as_str();
                     is_first_iter = false;
                 }
             }
-            contents = contents + "\n";
+            contents += "\n";
         }
         write(file_path, contents)?;
         Ok(())
@@ -73,7 +73,7 @@ impl csv {
             if !is_first_iter {
                 contents = contents + "," + string.as_str();
             } else {
-                contents = contents + string.as_str();
+                contents += string.as_str();
                 is_first_iter = false;
             }
         }
