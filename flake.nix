@@ -13,12 +13,12 @@
       pname = "weather-station";
       version = "0.1.0";
 
-      src = ./.;
+      src = pkgs64.lib.cleanSource ./.;
 
       cargoLock.lockFile = ./Cargo.lock;
-      
-      cargoFeatures = ["no_pi"];
-      
+
+      buildFeatures = ["no_pi"];
+
       # defaultFeatures = false;
     };
 
