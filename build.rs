@@ -43,16 +43,19 @@ fn main() {
         // Removes .c file extension
         name.truncate(name.len() - 2);
     }
+    let mut builder = Build::new();
+    builder.flag("-lwiringPi");
     for (src, libname) in filenames.iter().zip(compilenames.iter()) {
-        Build::new().file(src).compile(libname.as_str());
+        builder.file(src);
     }
-    // Build::new().file("c/main.c").compile("main");
+    builder.compile("weather_station_c");
     // Only links to wiringPi if we are allowed to use a pi
     #[cfg(not(feature = "no_pi"))]
     {
-        println!("cargo:rustc-link-search=native=/usr/local/lib");
+        // println!("cargo:rustc-link-search=native=/usr/local/lib");
         println!("cargo:rustc-link-lib=wiringPi");
     }
+    // Build::new().file("c/main.c").compile("main");
 }
 
 // If c compilation is disabled, use this main

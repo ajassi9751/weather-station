@@ -7,7 +7,7 @@
 
   outputs = { self, nixpkgs }: let
     pkgs64 = import nixpkgs { system = "x86_64-linux"; };
-    pkgsArm = import nixpkgs { system = "arm-linux"; };
+    pkgsArm = import nixpkgs { system = "aarch64-linux"; };
   in {
     packages.x86_64-linux.default = pkgs64.rustPlatform.buildRustPackage rec {
       pname = "weather-station";
@@ -37,7 +37,7 @@
     };
  
     # Use for raspberry pi
-    packages.arm-linux.default = pkgsArm.rustPlatform.buildRustPackage rec {
+    packages.aarch64-linux.default = pkgsArm.rustPlatform.buildRustPackage rec {
       pname = "weather-station";
       version = "0.1.0";
 
@@ -48,7 +48,7 @@
       buildInputs = with pkgsArm; [ wiringpi ];
     };
     
-    devShells.arm-linux.default = pkgsArm.mkShell {
+    devShells.aarch64-linux.default = pkgsArm.mkShell {
       # Starts zsh as the default shell
       shellHook = ''
         exec zsh

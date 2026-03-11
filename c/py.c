@@ -31,7 +31,7 @@ void print_temp_humidity () {
 	int data[100];
 	int j = 0;
 	int datai = 0;
-	setupWiringPiGpio();
+	wiringPiSetupGpio();
 	sleep(1); // Maybe use delayMicroseconds
 	// Sets up the pin
 	pinMode(CHANNEL, OUTPUT);
@@ -45,7 +45,7 @@ void print_temp_humidity () {
 	while (digitalRead(CHANNEL)==LOW) {
 		continue;
 	}
-	while (digitalRead(CHANNELL)==HIGH) {
+	while (digitalRead(CHANNEL)==HIGH) {
 		continue;
 	}
 	// Gather 40 points of data
