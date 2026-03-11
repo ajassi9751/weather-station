@@ -22,4 +22,3 @@ pub fn setup_wiring_pi() {
         c::setup_wiring_pi();
     }
 }
-

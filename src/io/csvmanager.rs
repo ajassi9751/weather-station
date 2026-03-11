@@ -1,13 +1,13 @@
 #[cfg(not(feature = "rust_only"))]
 use crate::c::ctime::get_c_time;
 use crate::io::csv::csv;
-use chrono::{Duration, Local, Datelike};
+use chrono::{Datelike, Duration, Local};
 use std::fs::{read_to_string, write};
 
 const HOME_DIRECTORY: &str = "data/";
 
 #[cfg(feature = "rust_only")]
-fn get_c_time () -> String {
+fn get_c_time() -> String {
     String::from("Disable the rust_only feature for dates to work")
 }
 
@@ -36,7 +36,7 @@ impl csvmanager {
         let days_since_monday = today.weekday().num_days_from_monday() as i64;
         let monday = today - Duration::days(days_since_monday);
         let monday_str = monday.format("%Y-%m-%d").to_string();
-        let csvname = format!("{}.csv", monday_str); 
+        let csvname = format!("{}.csv", monday_str);
         match result {
             Ok(v) => contents = v,
             Err(_) => {
@@ -51,12 +51,12 @@ impl csvmanager {
         if contents == csvname {
             // If it cant read the file, just give it a default body to be safe
             match temp_csv.parse_into_body(format!("{}{}", HOME_DIRECTORY, csvname).as_str()) {
-                Ok(_) => {},
+                Ok(_) => {}
                 Err(_) => temp_csv.give_body(Vec::new()),
             }
             // Read the contents and parse them
-        }
-        else { // Write the this week to othe file
+        } else {
+            // Write the this week to other file
             write(HOME_DIRECTORY.to_owned() + "csvmanager.txt", &csvname)
                 .expect("Error writing to file");
         }
@@ -95,7 +95,7 @@ impl csvmanager {
     fn try_to_write_row(&mut self) {
         for (i, string) in self.rowque.iter().enumerate() {
             // Last element should be ""
-            if i == self.rowque.len()-1 {
+            if i == self.rowque.len() - 1 {
                 break;
             }
             if string.is_empty() {
@@ -151,8 +151,11 @@ impl csvmanager {
     fn change_csv(&mut self) {
         self.currentcsv.remove_body();
         // Maybe don't use .expect becuase this runs every week and could lead to data loss upon restart
-        write(HOME_DIRECTORY.to_owned() + "csvmanager.txt", self.prevcsvname.as_str())
-            .expect("Error writing to file");
+        write(
+            HOME_DIRECTORY.to_owned() + "csvmanager.txt",
+            self.prevcsvname.as_str(),
+        )
+        .expect("Error writing to file");
     }
 }
 

@@ -27,4 +27,3 @@ pub fn get_c_time() -> String {
         }
     }
 }
-

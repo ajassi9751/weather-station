@@ -30,7 +30,11 @@ fn main() {
         "data/my.csv",
         vec![String::from("really"), String::from("really")],
     );
-    let headers:Vec<String> = vec![String::from("Temp"), String::from("Hum"), String::from("Speed")];
+    let headers: Vec<String> = vec![
+        String::from("Temp"),
+        String::from("Hum"),
+        String::from("Speed"),
+    ];
     let mut csvman = csvmanager::new(headers);
     csvman.give_data(Data::Tempurature(100.1));
     csvman.give_data(Data::Humidity(100.1));
