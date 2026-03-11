@@ -6,6 +6,8 @@ target/
 c/main
 # For csvmanager
 data/csvmanager.txt
+# For pi.h because it should be created by build.rs
+c/pi.h
 
 # For the nix folder that gets created
 result
