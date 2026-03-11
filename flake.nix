@@ -6,29 +6,28 @@
   };
 
   outputs = { self, nixpkgs }: let
-    pkgs = nixpkgs.legacyPackages.x86_64-linux;
-    armpkgs = nixpkgs.legacyPackages.arm-linux;
-    run64 = pkgs.writeShellApplication {
-      name = "run64";
-      runtimeInputs = with pkgs; [ cargo rustc ];
-      text = ''
-        ${pkgs.cargo}/bin/cargo run --features "no_pi"
-      '';
-    };
-    runArm = pkgs.writeShellApplication {
-      name = "runArm";
-      runtimeInputs = with armpkgs; [ cargo rustc wiringpi ];
-      text = ''
-        ${pkgs.cargo}/bin/cargo run
-      '';
-    };
+    pkgs64 = import nixpkgs { system = "x86_64-linux"; };
+    pkgsArm = import nixpkgs { system = "arm-linux"; };
   in {
-    devShells.x86_64-linux.default = pkgs.mkShell {
+    packages.x86_64-linux.default = pkgs64.rustPlatform.buildRustPackage rec {
+      pname = "weather-station";
+      version = "0.1.0";
+
+      src = ./.;
+
+      cargoLock.lockFile = ./Cargo.lock;
+      
+      cargoFeatures = ["no_pi"];
+      
+      # defaultFeatures = false;
+    };
+
+    devShells.x86_64-linux.default = pkgs64.mkShell {
       # Starts zsh as the default shell
       shellHook = ''
         exec zsh
       '';
-      buildInputs = with pkgs; [
+      buildInputs = with pkgs64; [
         rustc
         cargo
         rustfmt
@@ -37,32 +36,24 @@
       ];
     };
  
-    # This definitely doesnt work becuase it should've failed when compiling for arm but it didn't
-    packages.x86_64-linux.default = pkgs.writeShellScriptBin "default" ''
-      ${pkgs.cargo}/bin/cargo build --features "no_pi"
-    '';
-
-    apps.x86_64-linux.default = {
-      program = "${run64}/bin/run64";
-      type = "app";
-    };
-
     # Use for raspberry pi
-    packages.arm-linux.default = pkgs.writeShellScriptBin "default" ''
-      ${pkgs.cargo}/bin/cargo build
-    ''; 
+    packages.arm-linux.default = pkgsArm.rustPlatform.buildRustPackage rec {
+      pname = "weather-station";
+      version = "0.1.0";
 
-    apps.arm-linux.default = {
-      program = "${runArm}/bin/runArm";
-      type = "app";
+      src = ./.;
+
+      cargoLock.lockFile = ./Cargo.lock;
+
+      buildInputs = with pkgsArm; [ wiringpi ];
     };
-
-    devShells.arm-linux.default = pkgs.mkShell {
+    
+    devShells.arm-linux.default = pkgsArm.mkShell {
       # Starts zsh as the default shell
       shellHook = ''
         exec zsh
       '';
-      buildInputs = with armpkgs; [
+      buildInputs = with pkgsArm; [
         rustc
         cargo
         rustfmt
