@@ -1,7 +1,10 @@
 #[cfg(not(feature = "rust_only"))]
 use cc::Build;
 
+#[cfg(not(feature = "rust_only"))]
 use std::fs::{read_dir, write};
+
+#[cfg(not(feature = "rust_only"))]
 use std::process::exit;
 
 // I wonder if there is a way to auto install wiringPi, that would be great
