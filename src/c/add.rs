@@ -1,5 +1,6 @@
 // This files just exists as an initial test to build infastructure to make sure rust and c were compiling and linking properly
 #[cfg(not(feature = "rust_only"))]
+#[allow(dead_code)]
 mod c {
     use std::ffi::c_int;
     unsafe extern "C" {
@@ -8,6 +9,7 @@ mod c {
 }
 
 #[cfg(not(feature = "rust_only"))]
+#[allow(dead_code)]
 pub fn add(x: i32, y: i32) -> i32 {
     let result;
     unsafe {

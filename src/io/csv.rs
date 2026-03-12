@@ -8,8 +8,7 @@ pub struct csv {
     body: Vec<Vec<String>>, // Vec of Vec of strings is even sadder
 }
 
-// We also want to use multiple files in case one gets overwritten
-// Maybe a weekly new file?
+#[allow(dead_code)]
 impl csv {
     pub fn new_default() -> csv {
         csv {
