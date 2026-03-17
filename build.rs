@@ -38,7 +38,10 @@ fn main() {
     let mut filenames: Vec<String> = Vec::new();
     get_file_paths(&mut filenames, "c/");
     let mut builder = Build::new();
-    builder.flag("-lwiringPi");
+    #[cfg(not(feature = "no_pi"))]
+    {
+        builder.flag("-lwiringPi");
+    }
     for src in filenames {
         builder.file(src);
     }
