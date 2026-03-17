@@ -9,3 +9,6 @@ pub mod dht11;
 
 #[cfg(not(feature = "no_pi"))]
 pub mod py;
+
+#[cfg(not(feature = "no_pi"))]
+pub mod wind_speed;
