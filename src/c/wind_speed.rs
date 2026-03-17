@@ -1,4 +1,5 @@
 #[repr(C)]
+#[derive(Debug, Clone, PartialEq)]
 pub struct Wind_speed {
     pub rotations: f64,
     pub rots_per_second: f64,
