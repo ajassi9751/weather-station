@@ -1,5 +1,5 @@
-#ifndef WIND_SPEED
-#define WIND_SPEED
+#ifndef PY
+#define PY
 #include "pi.h"
 #if USE_PI == 1
 #include <math.h>
