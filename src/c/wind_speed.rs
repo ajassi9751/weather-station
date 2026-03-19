@@ -21,7 +21,5 @@ pub fn print_wind_speed() {
 }
 
 pub fn get_wind_speed() -> Wind_speed {
-    unsafe {
-        c::get_wind_speed()
-    }
+    unsafe { c::get_wind_speed() }
 }
