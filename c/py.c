@@ -8,7 +8,7 @@
 #include <wiringPi.h>
 #include "test.h"
 
-#define CHANNEL 17
+#define CHANNEL 22
 // This macro replicates the python y = x[0:1] syntax
 // It also keeps list1i in its own scope so it doesn't cause redefinition issues
 // Enter the first array [y], then the second [x], then range1 [0], then range2 [1]
@@ -40,7 +40,7 @@ void print_temp_humidity () {
 	delayMicroseconds(20000);
 	digitalWrite(CHANNEL, HIGH);
 	// Possibly change the pin to input mode
-	// pinMode(channel, INPUT);
+	pinMode(CHANNEL, INPUT);
 	// Wait for the pin to first give a low then high signal
 	while (digitalRead(CHANNEL)==LOW) {
 		continue;

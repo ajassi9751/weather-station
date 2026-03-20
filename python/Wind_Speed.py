@@ -9,7 +9,7 @@ GPIO.setmode(GPIO.BOARD)
 GPIO.setup(12,GPIO.IN)
 
 # Anamometer vane diameter (set to the value for your cup-to-cup in mm)
-vane_diameter = float(106)
+vane_diameter = float(125)
 
 # Calculate vane circumference in metres
 vane_circ = float (vane_diameter/1000)*3.1415

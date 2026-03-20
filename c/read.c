@@ -6,7 +6,7 @@
 #include <unistd.h>
 #include "test.h"
 
-#define PIN_NUMBER 17
+#define PIN_NUMBER 18
 
 void readPin () {
 	// uses BCM numbering of the GPIOs and directly accesses the GPIO registers.
@@ -14,7 +14,7 @@ void readPin () {
 
 	// pin mode ..(INPUT, OUTPUT, PWM_OUTPUT, GPIO_CLOCK)
 	// set pin 17 to input
-	pinMode(PIN_NUMBER, OUTPUT);
+	pinMode(PIN_NUMBER, INPUT);
 
 	// pull up/down mode (PUD_OFF, PUD_UP, PUD_DOWN) => down
 	// pullUpDnControl(17, PUD_DOWN);
@@ -24,6 +24,7 @@ void readPin () {
 	while (true) {
 		// printf("Loop\n");
 		int value = digitalRead(PIN_NUMBER);
+		printf("Value: %d\n", value);
 		if (HIGH == value)
 		{
 			printf("Its high\n");

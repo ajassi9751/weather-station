@@ -35,10 +35,10 @@ fn main() {
         String::from("Hum"),
         String::from("Speed"),
     ];
-    let mut csvman = csvmanager::new(headers);
-    csvman.give_data(Data::Tempurature(100.1));
-    csvman.give_data(Data::Humidity(100.1));
-    csvman.give_data(Data::WindSpeed(100.1));
+    // let mut csvman = csvmanager::new(headers);
+    // csvman.give_data(Data::Tempurature(100.1));
+    // csvman.give_data(Data::Humidity(100.1));
+    // csvman.give_data(Data::WindSpeed(100.1));
     #[cfg(not(feature = "rust_only"))]
     {
         c_tests()
@@ -51,11 +51,24 @@ fn main() {
 
 #[cfg(not(feature = "no_pi"))]
 fn wiring_pi() {
-    c::dht11::setup_wiring_pi();
+    // c::dht11::setup_wiring_pi();
+    thread::spawn(
+    || loop {
+        // thread::sleep(time::Duration::from_millis(2000));
+        // c::dht11::read_dht11_dat();
+        // c::py::print_temp_humidity();
+        c::wind_speed::print_wind_speed();
+    }
+    );
+    // thread::spawn(
+        // || {
+            // println!("Wind speed: {} MPH", c::wind_speed::get_wind_speed().windspeedMPH);
+            // c::wind_speed::get_wind_speed();
+        //}
+    // );
     loop {
+        println!("Multithreading");
         thread::sleep(time::Duration::from_millis(2000));
-        c::dht11::read_dht11_dat();
-        c::py::print_temp_humidity();
     }
 }
 

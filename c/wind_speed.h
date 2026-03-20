@@ -8,11 +8,11 @@
 #include <math.h>
 void print_wind_speed();
 typedef struct {
-    double rotations = 0;
-    double rots_per_second = 0;
-    double windspeed = 0;
-    double windspeedMPH = 0;
+    double rotations;
+    double rots_per_second;
+    double windspeed;
+    double windspeedMPH;
 } Wind_data;
-Wind_data get_wind_speed();
+void get_wind_speed(Wind_data*);
 #endif
 #endif

@@ -7,7 +7,7 @@ import time
 
 print ("Start")
 
-channel = 17
+channel = 22
 data = []
 j = 0
 

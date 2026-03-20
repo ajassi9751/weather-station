@@ -2,5 +2,5 @@
 // Make it 0 to get rid of main functions in code so rust can compile
 #ifndef TESTH
 #define TESTH
-#define TEST 0
+#define TEST 1
 #endif

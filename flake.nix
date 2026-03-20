@@ -60,6 +60,9 @@
         rust-analyzer
         zsh
         wiringpi
+	tmux
+	# yazi
+	# btop
       ];
     };
   };
