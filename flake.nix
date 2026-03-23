@@ -3,9 +3,13 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    # Old version of nixpgks for neofetch
+    nixpkgs-old.url = "github:nixos/nixpkgs/nixos-24.05";
   };
 
-  outputs = { self, nixpkgs }: let
+  outputs = { self, nixpkgs, nixpkgs-old }: let
+    pkgs-old64 = import nixpkgs-old { system = "x86_64-linux"; };
+    pkgs-oldArm = import nixpkgs-old { system = "aarch64-linux"; };
     pkgs64 = import nixpkgs { system = "x86_64-linux"; };
     pkgsArm = import nixpkgs { system = "aarch64-linux"; };
   in {
@@ -33,6 +37,8 @@
         rustfmt
         rust-analyzer
         zsh
+        gh
+        pkgs-old64.neofetch
       ];
     };
  
@@ -60,9 +66,11 @@
         rust-analyzer
         zsh
         wiringpi
-	tmux
-	# yazi
-	# btop
+        gh
+	      tmux
+        pkgs-oldArm.neofetch
+	      # yazi
+	      # btop
       ];
     };
   };
