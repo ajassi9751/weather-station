@@ -12,6 +12,7 @@ fn get_c_time() -> String {
 }
 
 #[allow(non_camel_case_types)]
+#[derive(Debug, Clone, PartialEq)]
 pub struct csvmanager {
     // Manages adding times and creating weekly csvs, as well as file paths
     currentcsv: csv,     // Holds the current csv
