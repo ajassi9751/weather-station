@@ -17,7 +17,7 @@
       pname = "weather-station";
       version = "0.1.0";
 
-      src = pkgs64.lib.cleanSource ./.;
+      src = ./.;
 
       cargoLock.lockFile = ./Cargo.lock;
 
