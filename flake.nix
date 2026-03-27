@@ -8,16 +8,28 @@
   };
 
   outputs = { self, nixpkgs, nixpkgs-old }: let
+    # Nixpkgs stuff
     pkgs-old64 = import nixpkgs-old { system = "x86_64-linux"; };
     pkgs-oldArm = import nixpkgs-old { system = "aarch64-linux"; };
     pkgs64 = import nixpkgs { system = "x86_64-linux"; };
     pkgsArm = import nixpkgs { system = "aarch64-linux"; };
+    # File source stuff
+    fs64 = pkgs64.lib.fileset;
+    fsArm = pkgsArm.lib.fileset;
+    # Include files c and rust files for the derivation
+    sourceFiles64 = fs64.unions [ ./c ./src ./Cargo.toml ./Cargo.lock ];
+    sourceFilesArm = fsArm.unions [ ./c ./src ./Cargo.toml ./Cargo.lock ];
   in {
     packages.x86_64-linux.default = pkgs64.rustPlatform.buildRustPackage rec {
       pname = "weather-station";
       version = "0.1.0";
 
-      src = ./.;
+      # src = ./.;
+
+      src = fs64.toSource {
+        root = ./.;
+        fileset = sourceFiles64;
+      };
 
       cargoLock.lockFile = ./Cargo.lock;
 
@@ -47,7 +59,12 @@
       pname = "weather-station";
       version = "0.1.0";
 
-      src = ./.;
+      # src = ./.;
+
+      src = fsArm.toSource {
+        root = ./.;
+        fileset = sourceFilesArm;
+      };     
 
       cargoLock.lockFile = ./Cargo.lock;
 
