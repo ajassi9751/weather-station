@@ -35,10 +35,10 @@ fn main() {
         String::from("Hum"),
         String::from("Speed"),
     ];
-    // let mut csvman = csvmanager::new(headers);
-    // csvman.give_data(Data::Tempurature(100.1));
-    // csvman.give_data(Data::Humidity(100.1));
-    // csvman.give_data(Data::WindSpeed(100.1));
+    let mut csvman = csvmanager::new(headers);
+    csvman.give_data(Data::Tempurature(100.1));
+    csvman.give_data(Data::Humidity(100.1));
+    csvman.give_data(Data::WindSpeed(100.1));
     #[cfg(not(feature = "rust_only"))]
     {
         c_tests()
