@@ -4,7 +4,8 @@ mod c;
 // Stuff for csvs
 mod io;
 // Used for multithreading
-use std::{thread, time};
+#[cfg(not(feature = "no_pi"))]
+use std::{thread, time, sync::{Arc, Mutex}};
 
 // Manages files and has the Data type
 use crate::io::{csvmanager::csvmanager, data::Data};
@@ -31,13 +32,15 @@ fn main() {
     //     vec![String::from("really"), String::from("really")],
     // );
     let headers: Vec<String> = vec![
-        String::from("Temp"),
-        String::from("Hum"),
-        String::from("Speed"),
+        String::from("Tempurature"),
+        String::from("Humidity"),
+        String::from("Air Pressure"),
+        String::from("Wind Speed")
     ];
     let mut csvman = csvmanager::new(headers);
     csvman.give_data(Data::Tempurature(100.1));
     csvman.give_data(Data::Humidity(100.1));
+    csvman.give_data(Data::AirPressure(100.1));
     csvman.give_data(Data::WindSpeed(100.1));
     #[cfg(not(feature = "rust_only"))]
     {
@@ -45,30 +48,42 @@ fn main() {
     }
     #[cfg(not(feature = "no_pi"))]
     {
-        wiring_pi();
+        pi_data();
     }
 }
 
 #[cfg(not(feature = "no_pi"))]
-fn wiring_pi() {
-    // c::dht11::setup_wiring_pi();
-    thread::spawn(
-    || loop {
-        // thread::sleep(time::Duration::from_millis(2000));
-        // c::dht11::read_dht11_dat();
-        // c::py::print_temp_humidity();
-        c::wind_speed::print_wind_speed();
-    }
+fn pi_data() {
+    let headers: Vec<String> = vec![
+        String::from("Tempurature"),
+        String::from("Humidity"),
+        String::from("Air Pressure"),
+        String::from("Wind Speed")
+    ];
+    // The csv manager instance
+    let csvman = Arc::new(Mutex::new(csvmanager::new(headers)));
+    // Handles for threads
+    let mut handles = vec![];
+    // Wind speed
+    let handle = thread::spawn(
+        move || {
+            value = c::wind_speed::get_wind_speed();
+            // Make sure to only keep the lock for as little as possible
+            {
+                let mut man = csvman.lock().unwrap();
+                *man.give_data(Data::WindSpeed(value));
+            }
+            // 300 seconds is 5 minutes and it takes 10 seconds to measure so the rate stays consistent
+            thread::sleep(time::Duration::from_secs(300-10));
+        }
     );
-    // thread::spawn(
-        // || {
-            // println!("Wind speed: {} MPH", c::wind_speed::get_wind_speed().windspeedMPH);
-            // c::wind_speed::get_wind_speed();
-        //}
-    // );
-    loop {
-        println!("Multithreading");
-        thread::sleep(time::Duration::from_millis(2000));
+    handles.push(handle);
+    // BME280
+    // Air Pressure
+    // Humidity
+    // Tempurature
+    for handle in handles {
+        handle.join().unwrap();
     }
 }
 
