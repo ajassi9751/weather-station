@@ -123,11 +123,15 @@ impl csvmanager {
         {
             println!("Rowque:\n{:?}", rowque);
         }
-        // Should use the result here
-        // let _ = self.currentcsv.write_new_row(csvname.as_str(), rowque);
-        self.currentcsv.new_row(rowque);
-        // Should use the result here
-        let _ = self.currentcsv.save_to_file(csvpath.as_str());
+        if !std::path::Path::new(&csvpath).exists() {
+            self.currentcsv.new_row(rowque);
+            // Should use the result here
+            let _ = self.currentcsv.save_to_file(&csvpath);
+        }
+        else {
+            // Should use the result here
+            let _ = self.currentcsv.write_new_row(&csvpath, rowque); 
+        }
         self.rowque = Vec::new();
         self.rowque.resize(length, String::from(""));
     }
@@ -141,14 +145,14 @@ impl csvmanager {
         if self.prevcsvpath.is_empty() {
             // A file with the name of the date of this week's monday
             self.prevcsvpath = csvpath;
-            self.prevcsvpath.as_str()
+            &self.prevcsvpath
         } else if self.prevcsvpath != csvpath {
             self.prevcsvpath = csvpath;
             // Idk if this should be done here
             self.change_csv();
-            self.prevcsvpath.as_str()
+            &self.prevcsvpath
         } else {
-            self.prevcsvpath.as_str()
+            &self.prevcsvpath
         }
     }
     // Changes to a "new" csv by removing th ebody of it and writing to csvmanager.txt
@@ -157,7 +161,7 @@ impl csvmanager {
         // Maybe don't use .expect becuase this runs every week and could lead to data loss upon restart
         write(
             HOME_DIRECTORY.to_owned() + "csvmanager.txt",
-            self.prevcsvpath.as_str(),
+            &self.prevcsvpath,
         )
         .expect("Error writing to file");
     }
