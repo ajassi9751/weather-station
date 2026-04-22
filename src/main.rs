@@ -19,17 +19,17 @@ use crate::io::{csvmanager::csvmanager, data::Data};
 // Battery life into account
 // Writing to files will not use buffered writes as every 5 min makes them worthless
 fn main() {
-    let headers: Vec<String> = vec![String::from("Temp"), String::from("Coolness")];
-    let body: Vec<Vec<String>> = vec![
-        vec![String::from("Nice"), String::from("and Cool")],
-        vec![String::from("Really"), String::from("Cool")],
-    ];
-    let mut mycsv = crate::io::csv::csv::new(headers, body);
-    let _ = mycsv.save_to_file("data/my.csv");
-    let _ = mycsv.write_new_row(
-        "data/my.csv",
-        vec![String::from("really"), String::from("really")],
-    );
+    // let headers: Vec<String> = vec![String::from("Temp"), String::from("Coolness")];
+    // let body: Vec<Vec<String>> = vec![
+    //     vec![String::from("Nice"), String::from("and Cool")],
+    //     vec![String::from("Really"), String::from("Cool")],
+    // ];
+    // let mut mycsv = crate::io::csv::csv::new(headers, body);
+    // let _ = mycsv.save_to_file("data/my.csv");
+    // let _ = mycsv.write_new_row(
+    //     "data/my.csv",
+    //     vec![String::from("really"), String::from("really")],
+    // );
     let headers: Vec<String> = vec![
         String::from("Temp"),
         String::from("Hum"),

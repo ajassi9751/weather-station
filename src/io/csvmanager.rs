@@ -17,7 +17,7 @@ pub struct csvmanager {
     // Manages adding times and creating weekly csvs, as well as file paths
     currentcsv: csv,     // Holds the current csv
     rowque: Vec<String>, // Holds info to be put into the row
-    prevcsvname: String,
+    prevcsvpath: String,
 }
 
 impl csvmanager {
@@ -49,7 +49,7 @@ impl csvmanager {
         {
             println!("contents: {}, csvname: {}", contents, csvname);
         }
-        if contents == csvname {
+        if contents == csvname && std::path::Path::new(&(HOME_DIRECTORY.to_owned()+&csvname)).exists() {
             // If it cant read the file, just give it a default body to be safe
             match temp_csv.parse_into_body(format!("{}{}", HOME_DIRECTORY, csvname).as_str()) {
                 Ok(_) => {}
@@ -66,7 +66,7 @@ impl csvmanager {
         csvmanager {
             currentcsv: temp_csv,
             rowque: rowque,
-            prevcsvname: String::from(""),
+            prevcsvpath: String::from(""),
         }
     }
     // You can give data of any enum that implements the give_data trait
@@ -117,35 +117,38 @@ impl csvmanager {
         }
         let length = self.rowque.len();
         // Dumb heap allocation for no reason
-        let csvname = self.get_csv_name().to_owned();
+        let csvpath = self.get_csv_path().to_owned();
         let rowque = self.rowque.clone();
         #[cfg(debug_assertions)]
         {
             println!("Rowque:\n{:?}", rowque);
         }
         // Should use the result here
-        let _ = self.currentcsv.write_new_row(csvname.as_str(), rowque);
+        // let _ = self.currentcsv.write_new_row(csvname.as_str(), rowque);
+        self.currentcsv.new_row(rowque);
+        // Should use the result here
+        let _ = self.currentcsv.save_to_file(csvpath.as_str());
         self.rowque = Vec::new();
         self.rowque.resize(length, String::from(""));
     }
-    // Gets the name of the csv right now
+    // Gets the path of the csv right now
     // Changes the csv if needed but idk if that should be done here
-    fn get_csv_name(&mut self) -> &str {
+    fn get_csv_path(&mut self) -> &str {
         let today = Local::now().date_naive();
         let days_since_monday = today.weekday().num_days_from_monday() as i64;
         let monday = today - Duration::days(days_since_monday);
-        let csvname = format!("{}{}.csv", HOME_DIRECTORY, monday.format("%Y-%m-%d"));
-        if self.prevcsvname.is_empty() {
+        let csvpath = format!("{}{}.csv", HOME_DIRECTORY, monday.format("%Y-%m-%d"));
+        if self.prevcsvpath.is_empty() {
             // A file with the name of the date of this week's monday
-            self.prevcsvname = csvname;
-            self.prevcsvname.as_str()
-        } else if self.prevcsvname != csvname {
-            self.prevcsvname = csvname;
+            self.prevcsvpath = csvpath;
+            self.prevcsvpath.as_str()
+        } else if self.prevcsvpath != csvpath {
+            self.prevcsvpath = csvpath;
             // Idk if this should be done here
             self.change_csv();
-            self.prevcsvname.as_str()
+            self.prevcsvpath.as_str()
         } else {
-            self.prevcsvname.as_str()
+            self.prevcsvpath.as_str()
         }
     }
     // Changes to a "new" csv by removing th ebody of it and writing to csvmanager.txt
@@ -154,7 +157,7 @@ impl csvmanager {
         // Maybe don't use .expect becuase this runs every week and could lead to data loss upon restart
         write(
             HOME_DIRECTORY.to_owned() + "csvmanager.txt",
-            self.prevcsvname.as_str(),
+            self.prevcsvpath.as_str(),
         )
         .expect("Error writing to file");
     }
