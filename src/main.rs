@@ -5,8 +5,10 @@ mod c;
 mod io;
 // Used for multithreading
 #[cfg(not(feature = "no_pi"))]
-use std::{thread, time, sync::{Arc, Mutex}};
+use std::{thread, time, sync::{Arc, Mutex}, process::Command};
 
+#[cfg(not(feature = "no_pi"))]
+use crate::io::csvmanager;
 // Manages files and has the Data type
 use crate::io::{csvmanager::csvmanager, data::Data};
 // We basically have a rust storage backend for managing data but tons of c code for interacting with sensors and wiringPi
@@ -61,7 +63,7 @@ fn pi_data() {
         String::from("Wind Speed")
     ];
     // The csv manager instance
-    let csvman = Arc::new(Mutex::new(csvmanager::new(headers)));
+    let csvman: Arc<Mutex<csvmanager>> = Arc::new(Mutex::new(csvmanager::new(headers)));
     // Handles for threads
     let mut handles = vec![];
     // Wind speed
@@ -82,6 +84,21 @@ fn pi_data() {
     // Air Pressure
     // Humidity
     // Tempurature
+    let handle = thread::spawn(
+        move || {
+            let command = Command::new("python ../python/BME280.py")
+                .output()
+                .expect("Failed to run command");
+            let output = String::from_utf8_lossy(&command.stdout);
+            {
+                let mut man = csvman.lock().unwrap();
+                // *man.give_data(Data::AirPressure(0.0));
+            }
+            // Wait for 5 minutes
+            thread::sleep(time::Duration::from_secs(300));
+        }
+    );
+    handles.push(handle);
     for handle in handles {
         handle.join().unwrap();
     }
