@@ -37,13 +37,13 @@ fn main() {
         String::from("Tempurature"),
         String::from("Humidity"),
         String::from("Air Pressure"),
-        String::from("Wind Speed")
+        String::from("Wind Speed (m/s)")
     ];
     let mut csvman = csvmanager::new(headers);
-    csvman.give_data(Data::Tempurature(100.1));
-    csvman.give_data(Data::Humidity(100.1));
-    csvman.give_data(Data::AirPressure(100.1));
-    csvman.give_data(Data::WindSpeed(100.1));
+    csvman.give_data(Data::Tempurature(1.0));
+    csvman.give_data(Data::Humidity(2.0));
+    csvman.give_data(Data::AirPressure(3.0));
+    csvman.give_data(Data::WindSpeed(4.0));
     #[cfg(not(feature = "rust_only"))]
     {
         c_tests()
@@ -73,7 +73,7 @@ fn pi_data() {
             // Make sure to only keep the lock for as little as possible
             {
                 let mut man = csvman.lock().unwrap();
-                *man.give_data(Data::WindSpeed(value));
+                *man.give_data(Data::WindSpeed(value.windspeed));
             }
             // 300 seconds is 5 minutes and it takes 10 seconds to measure so the rate stays consistent
             thread::sleep(time::Duration::from_secs(300-10));
