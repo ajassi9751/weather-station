@@ -13,24 +13,23 @@ fn get_c_time() -> String {
 
 #[allow(non_camel_case_types)]
 #[derive(Debug, Clone, PartialEq)]
-pub struct csvmanager {
+pub struct csvmanager <const N: usize> {
     // Manages adding times and creating weekly csvs, as well as file paths
-    currentcsv: csv,     // Holds the current csv
-    rowque: Vec<String>, // Holds info to be put into the row
+    currentcsv: csv<N>,     // Holds the current csv
+    rowque: [Box<str>; N], // Holds info to be put into the row
     prevcsvpath: String,
 }
 
-impl csvmanager {
+impl <const N: usize> csvmanager <N> {
     // Creates a new csvmanager based on the headers you give it
     // It tries to read from a csvmanager.txt which gives it info about the last week the program was active
     // If that week is this week then it recovers the weeks file
     // If that fails it just ignores it and moves on as it will auto create the file later on
     // If the weeks don't match, it writes this week to the manager file
-    pub fn new(mut headers: Vec<String>) -> csvmanager {
-        headers.push(String::from("Date and Time"));
+    pub fn new(mut headers: Vec<Box<str>>) -> csvmanager<N> {
+        headers.push("Date and Time".into());
         let mut temp_csv = csv::new_default();
-        let vecsize = headers.len();
-        temp_csv.give_headers(headers);
+        temp_csv.give_headers(headers.try_into().expect("Size error converting vec into array"));
         let result = read_to_string(HOME_DIRECTORY.to_owned() + "csvmanager.txt");
         let mut contents = String::from("");
         let today = Local::now().date_naive();
@@ -61,8 +60,7 @@ impl csvmanager {
             write(HOME_DIRECTORY.to_owned() + "csvmanager.txt", &csvname)
                 .expect("Error writing to file");
         }
-        let mut rowque: Vec<String> = Vec::new();
-        rowque.resize(vecsize, String::from(""));
+        let rowque: [Box<str>; N] = std::array::from_fn(|_i| { "".into()});
         csvmanager {
             currentcsv: temp_csv,
             rowque: rowque,
@@ -77,13 +75,14 @@ impl csvmanager {
     pub fn give_data<T: MatchIntoType>(&mut self, data: T) {
         // I love this syntax
         let (value, position) = data.match_into_type();
+        // Make this a str instead of String
         // Make sure position isn't out of the Vec or the last element (reserved for dates)
         if position >= self.rowque.len() - 1 {
             // Check this
             return;
         }
         if self.rowque[position].is_empty() {
-            self.rowque[position] = value;
+            self.rowque[position] = value.into_boxed_str();
             #[cfg(debug_assertions)]
             {
                 println!("{:?}", self.rowque);
@@ -105,7 +104,8 @@ impl csvmanager {
         }
         // Make the last element the time and date
         let rowque_index: usize = self.rowque.len() - 1;
-        self.rowque[rowque_index] = get_c_time();
+        // Make this str instead of String
+        self.rowque[rowque_index] = get_c_time().into_boxed_str();
         // Write the row
         self.write_row();
     }
@@ -115,7 +115,6 @@ impl csvmanager {
         {
             println!("writing row");
         }
-        let length = self.rowque.len();
         // Dumb heap allocation for no reason
         let csvpath = self.get_csv_path().to_owned();
         let rowque = self.rowque.clone();
@@ -132,8 +131,7 @@ impl csvmanager {
             // Should use the result here
             let _ = self.currentcsv.write_new_row(&csvpath, rowque); 
         }
-        self.rowque = Vec::new();
-        self.rowque.resize(length, String::from(""));
+        self.rowque = std::array::from_fn(|_i| { "".into()});
     }
     // Gets the path of the csv right now
     // Changes the csv if needed but idk if that should be done here

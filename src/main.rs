@@ -31,13 +31,14 @@ fn main() {
     //     "data/my.csv",
     //     vec![String::from("really"), String::from("really")],
     // );
-    let headers: Vec<String> = vec![
-        String::from("Tempurature"),
-        String::from("Humidity"),
-        String::from("Air Pressure"),
-        String::from("Wind Speed")
+    let headers: Vec<Box<str>> = vec![
+        "Tempurature".into(),
+        "Humidity".into(),
+        "Air Pressure".into(),
+        "Wind Speed".into()
     ];
-    let mut csvman = csvmanager::new(headers);
+    // Reserve one extra for the date and time
+    let mut csvman: csvmanager<5> = csvmanager::new(headers);
     csvman.give_data(Data::Tempurature(100.1));
     csvman.give_data(Data::Humidity(100.1));
     csvman.give_data(Data::AirPressure(100.1));

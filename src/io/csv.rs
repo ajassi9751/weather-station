@@ -3,29 +3,29 @@ use std::fs::write;
 
 #[allow(non_camel_case_types)]
 #[derive(Debug, Clone, PartialEq)]
-pub struct csv {
-    headers: Vec<String>,   // Vec of strings is kind of sad
-    body: Vec<Vec<String>>, // Vec of Vec of strings is even sadder
+pub struct csv <const N: usize> {
+    headers: [Box<str>; N],   // Vec of strings is kind of sad
+    body: Vec<[Box<str>; N]> // Vec of Vec of strings is even sadder
 }
 
 #[allow(dead_code)]
-impl csv {
-    pub fn new_default() -> csv {
+impl <const N: usize> csv <N> {
+    pub fn new_default() -> csv<N> {
         csv {
-            headers: Vec::new(),
+            headers: std::array::from_fn(|_i| { "".into()}),
             body: Vec::new(),
         }
     }
-    pub fn new(headers: Vec<String>, body: Vec<Vec<String>>) -> csv {
+    pub fn new(headers: [Box<str>; N], body: Vec<[Box<str>; N]>) -> csv<N> {
         csv {
             headers: headers,
             body: body,
         }
     }
-    pub fn give_headers(&mut self, headers: Vec<String>) {
+    pub fn give_headers(&mut self, headers: [Box<str>; N]) {
         self.headers = headers;
     }
-    pub fn give_body(&mut self, body: Vec<Vec<String>>) {
+    pub fn give_body(&mut self, body: Vec<[Box<str>; N]>) {
         self.body = body;
     }
     pub fn save_to_file(&self, file_path: &str) -> std::io::Result<()> {
@@ -34,9 +34,9 @@ impl csv {
             // The reason I don't add the commas after is because it will mess it up at the end of
             // a row
             if !contents.is_empty() {
-                contents = contents + "," + header.as_str();
+                contents = contents + "," + header;
             } else {
-                contents += header.as_str();
+                contents += header;
             }
         }
         contents += "\n";
@@ -44,9 +44,9 @@ impl csv {
             let mut is_first_iter = true;
             for v in i {
                 if !is_first_iter {
-                    contents = contents + "," + v.as_str();
+                    contents = contents + "," + v;
                 } else {
-                    contents += v.as_str();
+                    contents += v;
                     is_first_iter = false;
                 }
             }
@@ -55,7 +55,7 @@ impl csv {
         write(file_path, contents)?;
         Ok(())
     }
-    pub fn write_new_row(&mut self, file_path: &str, row: Vec<String>) -> std::io::Result<()> {
+    pub fn write_new_row(&mut self, file_path: &str, row: [Box<str>; N]) -> std::io::Result<()> {
         #[cfg(debug_assertions)]
         {
             println!("File path: {}", file_path);
@@ -70,9 +70,9 @@ impl csv {
         self.body.push(row.clone());
         for string in row {
             if !is_first_iter {
-                contents = contents + "," + string.as_str();
+                contents = contents + "," + &string;
             } else {
-                contents += string.as_str();
+                contents += &string;
                 is_first_iter = false;
             }
         }
@@ -80,13 +80,13 @@ impl csv {
         write(file_path, contents)?;
         Ok(())
     }
-    pub fn new_row(&mut self, row: Vec<String>) {
+    pub fn new_row(&mut self, row: [Box<str>; N]) {
         self.body.push(row);
     }
-    pub fn get_headers(&self) -> &Vec<String> {
+    pub fn get_headers(&self) -> &[Box<str>] {
         &self.headers
     }
-    pub fn get_body(&self) -> &Vec<Vec<String>> {
+    pub fn get_body(&self) -> &Vec<[Box<str>; N]> {
         &self.body
     }
     // Add a function to parse a csv ino the body, like parse_into_body
@@ -102,11 +102,11 @@ impl csv {
             println!("file contents:\n{}", file_contents);
         }
         let mut current_element: String = String::from("");
-        let mut current_vec: Vec<String> = Vec::new();
-        let mut body: Vec<Vec<String>> = Vec::new();
+        let mut current_vec: [Option<Box<str>>; N] = [const{None}; N];
+        let mut body: Vec<[Box<str>; N]> = Vec::new();
         let mut headers: i32 = 0;
         let mut is_first_row: bool = true;
-        for char in file_contents.chars() {
+        for (i, char) in file_contents.chars().into_iter().enumerate() {
             // println!("{}", char);
             if is_first_row {
                 if char == ',' {
@@ -119,11 +119,11 @@ impl csv {
                 }
             } else {
                 if char == ',' {
-                    current_vec.push(current_element.clone());
+                    current_vec[i] = Some(current_element.into_boxed_str());
                     current_element = String::from("");
                 } else if char == '\n' {
-                    body.push(current_vec.clone());
-                    current_vec = Vec::new();
+                    body.push(current_vec.map(|element| element.unwrap()));
+                    current_vec = [const{None}; N];
                 } else {
                     // Idk if this works
                     let mut buf = [0u8; 4];
