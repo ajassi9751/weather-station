@@ -58,9 +58,7 @@ const DATA_FREQUENCY: i32 = 300;
 #[cfg(not(feature = "no_pi"))]
 fn pi_data() {
     // Get garbage data out of the BME280
-    {
-        let command = Command::new("./python/python/bin/python ./python/BME-clean.py");
-    }
+    let _ = Command::new("./python/python/bin/python ./python/BME-clean.py");
     let headers: Vec<String> = vec![
         String::from("Tempurature"),
         String::from("Humidity"),
