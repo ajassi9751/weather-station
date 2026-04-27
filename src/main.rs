@@ -3,12 +3,10 @@
 mod c;
 // Stuff for csvs
 mod io;
-// Used for multithreading
+// Used for multithreading and data collection
 #[cfg(not(feature = "no_pi"))]
 use std::{thread, time, sync::{Arc, Mutex}, process::Command};
 
-#[cfg(not(feature = "no_pi"))]
-use crate::io::csvmanager;
 // Manages files and has the Data type
 use crate::io::{csvmanager::csvmanager, data::Data};
 // We basically have a rust storage backend for managing data but tons of c code for interacting with sensors and wiringPi
@@ -67,38 +65,44 @@ fn pi_data() {
     // Handles for threads
     let mut handles = vec![];
     // Wind speed
-    let handle = thread::spawn(
-        move || {
-            value = c::wind_speed::get_wind_speed();
-            // Make sure to only keep the lock for as little as possible
-            {
-                let mut man = csvman.lock().unwrap();
-                *man.give_data(Data::WindSpeed(value.windspeed));
+    {
+        let csvman_clone = Arc::clone(&csvman);
+        let handle = thread::spawn(
+            move || {
+                // let value = c::wind_speed::get_wind_speed();
+                // Make sure to only keep the lock for as little as possible
+                {
+                    let mut man = csvman_clone.lock().unwrap();
+                    // man.give_data(Data::WindSpeed(value.windspeed));
+                }
+                // 300 seconds is 5 minutes and it takes 10 seconds to measure so the rate stays consistent
+                thread::sleep(time::Duration::from_secs(300-10));
             }
-            // 300 seconds is 5 minutes and it takes 10 seconds to measure so the rate stays consistent
-            thread::sleep(time::Duration::from_secs(300-10));
-        }
-    );
-    handles.push(handle);
+        );
+        handles.push(handle);
+    }
     // BME280
     // Air Pressure
     // Humidity
     // Tempurature
-    let handle = thread::spawn(
-        move || {
-            let command = Command::new("python ../python/BME280.py")
-                .output()
-                .expect("Failed to run command");
-            let output = String::from_utf8_lossy(&command.stdout);
-            {
-                let mut man = csvman.lock().unwrap();
-                // *man.give_data(Data::AirPressure(0.0));
+    {
+        let csvman_clone = Arc::clone(&csvman);
+        let handle = thread::spawn(
+            move || {
+                let command = Command::new("./python/python/bin/python ./python/BME280.py")
+                    .output()
+                    .expect("Failed to run command");
+                let output = String::from_utf8_lossy(&command.stdout);
+                {
+                    let mut man = csvman_clone.lock().unwrap();
+                    // man.give_data(Data::AirPressure(0.0));
+                }
+                // Wait for 5 minutes
+                thread::sleep(time::Duration::from_secs(300));
             }
-            // Wait for 5 minutes
-            thread::sleep(time::Duration::from_secs(300));
-        }
-    );
-    handles.push(handle);
+        );
+        handles.push(handle);
+    }
     for handle in handles {
         handle.join().unwrap();
     }
