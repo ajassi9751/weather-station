@@ -53,6 +53,9 @@ fn main() {
 }
 
 #[cfg(not(feature = "no_pi"))]
+const DATA_FREQUENCY: i32 = 300;
+
+#[cfg(not(feature = "no_pi"))]
 fn pi_data() {
     // Get garbage data out of the BME280
     {
@@ -80,7 +83,7 @@ fn pi_data() {
                     man.give_data(Data::WindSpeed(value.windspeed));
                 }
                 // 300 seconds is 5 minutes and it takes 10 seconds to measure so the rate stays consistent
-                thread::sleep(time::Duration::from_secs(300-10));
+                thread::sleep(time::Duration::from_secs(DATA_FREQUENCY-10));
             }
         );
         handles.push(handle);
@@ -106,7 +109,7 @@ fn pi_data() {
                     man.give_data(Data::AirPressure(parsed_output[2].parse().unwrap()));
                 }
                 // Wait for 5 minutes
-                thread::sleep(time::Duration::from_secs(300));
+                thread::sleep(time::Duration::from_secs(DATA_FREQUENCY));
             }
         );
         handles.push(handle);

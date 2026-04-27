@@ -4,7 +4,7 @@ use crate::io::csv::csv;
 use chrono::{Datelike, Duration, Local};
 use std::fs::{read_to_string, write};
 
-const HOME_DIRECTORY: &str = "data/";
+const HOME_DIRECTORY: &'static str = "data/";
 
 #[cfg(feature = "rust_only")]
 fn get_c_time() -> String {
