@@ -1,14 +1,14 @@
 use std::fs::read_to_string;
 use std::fs::write;
 
-#[allow(non_camel_case_types)]
+#[allow(non_camel_case_types, reason = "csv is the file format name so making it CSV or Csv doesn't make sense")]
 #[derive(Debug, Clone, PartialEq)]
 pub struct csv {
     headers: Vec<String>,   // Vec of strings is kind of sad
     body: Vec<Vec<String>>, // Vec of Vec of strings is even sadder
 }
 
-#[allow(dead_code)]
+#[allow(dead_code, reason = "I made some helpful functions even if they aren't used")]
 impl csv {
     pub fn new_default() -> csv {
         csv {

@@ -11,7 +11,7 @@ fn get_c_time() -> String {
     String::from("Disable the rust_only feature for dates to work")
 }
 
-#[allow(non_camel_case_types)]
+#[allow(non_camel_case_types, reason = "Again Csvmanager or CSVmanager wouldn't make sense becuase of the format name")]
 #[derive(Debug, Clone, PartialEq)]
 pub struct csvmanager {
     // Manages adding times and creating weekly csvs, as well as file paths
