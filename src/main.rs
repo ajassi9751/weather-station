@@ -59,11 +59,12 @@ const DATA_FREQUENCY: i32 = 300;
 fn pi_data() {
     // Get garbage data out of the BME280
     let _ = Command::new("./python/python/bin/python ./python/BME-clean.py");
+    // Set up headers
     let headers: Vec<String> = vec![
-        String::from("Tempurature"),
-        String::from("Humidity"),
-        String::from("Air Pressure"),
-        String::from("Wind Speed")
+        String::from("Tempurature (C°)"),
+        String::from("Humidity (%)"),
+        String::from("Air Pressure (kPa)"), // Unit might not be kPa
+        String::from("Wind Speed (m/s)")
     ];
     // The csv manager instance
     let csvman: Arc<Mutex<csvmanager>> = Arc::new(Mutex::new(csvmanager::new(headers)));
@@ -74,14 +75,16 @@ fn pi_data() {
         let csvman_clone = Arc::clone(&csvman);
         let handle = thread::spawn(
             move || {
-                let value = c::wind_speed::get_wind_speed();
-                // Make sure to only keep the lock for as little as possible
-                {
-                    let mut man = csvman_clone.lock().unwrap();
-                    man.give_data(Data::WindSpeed(value.windspeed));
+                while true {
+                    let value = c::wind_speed::get_wind_speed();
+                    // Make sure to only keep the lock for as little as possible
+                    {
+                        let mut man = csvman_clone.lock().unwrap();
+                        man.give_data(Data::WindSpeed(value.windspeed));
+                    }
+                    // 300 seconds is 5 minutes and it takes 10 seconds to measure so the rate stays consistent
+                    thread::sleep(time::Duration::from_secs(DATA_FREQUENCY-10));
                 }
-                // 300 seconds is 5 minutes and it takes 10 seconds to measure so the rate stays consistent
-                thread::sleep(time::Duration::from_secs(DATA_FREQUENCY-10));
             }
         );
         handles.push(handle);
@@ -94,24 +97,27 @@ fn pi_data() {
         let csvman_clone = Arc::clone(&csvman);
         let handle = thread::spawn(
             move || {
-                let command = Command::new("./python/python/bin/python ./python/BME-clean.py")
-                    .output()
-                    .expect("Failed to run command");
-                let output = String::from_utf8_lossy(&command.stdout);
-                // Split by the new lines
-                let parsed_output: Vec<&str> = output.split('\n').collect();
-                {
-                    let mut man = csvman_clone.lock().unwrap();
-                    man.give_data(Data::Tempurature(parsed_output[0].parse().unwrap()));
-                    man.give_data(Data::Humidity(parsed_output[1].parse().unwrap()));
-                    man.give_data(Data::AirPressure(parsed_output[2].parse().unwrap()));
+                while true {
+                    let command = Command::new("./python/python/bin/python ./python/BME-clean.py")
+                        .output()
+                        .expect("Failed to run command");
+                    let output = String::from_utf8_lossy(&command.stdout);
+                    // Split by the new lines
+                    let parsed_output: Vec<&str> = output.split('\n').collect();
+                    {
+                        let mut man = csvman_clone.lock().unwrap();
+                        man.give_data(Data::Tempurature(parsed_output[0].parse().unwrap()));
+                        man.give_data(Data::Humidity(parsed_output[1].parse().unwrap()));
+                        man.give_data(Data::AirPressure(parsed_output[2].parse().unwrap()));
+                    }
+                    // Wait for 5 minutes
+                    thread::sleep(time::Duration::from_secs(DATA_FREQUENCY));
                 }
-                // Wait for 5 minutes
-                thread::sleep(time::Duration::from_secs(DATA_FREQUENCY));
             }
         );
         handles.push(handle);
     }
+    // Join all handles
     for handle in handles {
         handle.join().unwrap();
     }
