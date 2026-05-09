@@ -31,17 +31,20 @@ fn main() {
     //     "data/my.csv",
     //     vec![String::from("really"), String::from("really")],
     // );
-    let headers: Vec<String> = vec![
-        String::from("Tempurature"),
-        String::from("Humidity"),
-        String::from("Air Pressure"),
-        String::from("Wind Speed (m/s)")
-    ];
-    let mut csvman = csvmanager::new(headers);
-    csvman.give_data(Data::Tempurature(1.0));
-    csvman.give_data(Data::Humidity(2.0));
-    csvman.give_data(Data::AirPressure(3.0));
-    csvman.give_data(Data::WindSpeed(4.0));
+    #[cfg(test)]
+    {
+        let headers: Vec<String> = vec![
+            String::from("Tempurature"),
+            String::from("Humidity"),
+            String::from("Air Pressure"),
+            String::from("Wind Speed (m/s)")
+        ];
+        let mut csvman = csvmanager::new(headers);
+        csvman.give_data(Data::Tempurature(1.0));
+        csvman.give_data(Data::Humidity(2.0));
+        csvman.give_data(Data::AirPressure(3.0));
+        csvman.give_data(Data::WindSpeed(4.0));
+    }
     #[cfg(not(feature = "rust_only"))]
     {
         c_tests()
@@ -53,7 +56,7 @@ fn main() {
 }
 
 #[cfg(not(feature = "no_pi"))]
-const DATA_FREQUENCY: i32 = 300;
+const DATA_FREQUENCY: u64 = 300;
 
 #[cfg(not(feature = "no_pi"))]
 fn pi_data() {
@@ -75,11 +78,15 @@ fn pi_data() {
         let csvman_clone = Arc::clone(&csvman);
         let handle = thread::spawn(
             move || {
-                while true {
+                loop {
                     let value = c::wind_speed::get_wind_speed();
+                    #[cfg(debug_assertions)]
+                    {
+                        println!("Speed: {}", value.windspeed);
+                    }
                     // Make sure to only keep the lock for as little as possible
                     {
-                        let mut man = csvman_clone.lock().unwrap();
+                        let mut man = csvman_clone.lock().expect("Couldn't obtain mutex lock");
                         man.give_data(Data::WindSpeed(value.windspeed));
                     }
                     // 300 seconds is 5 minutes and it takes 10 seconds to measure so the rate stays consistent
@@ -97,15 +104,16 @@ fn pi_data() {
         let csvman_clone = Arc::clone(&csvman);
         let handle = thread::spawn(
             move || {
-                while true {
-                    let command = Command::new("./python/python/bin/python ./python/BME-clean.py")
+                loop {
+                    let command = Command::new("./python/python/bin/python")
+                        .arg("./python/BME-clean.py")
                         .output()
                         .expect("Failed to run command");
                     let output = String::from_utf8_lossy(&command.stdout);
                     // Split by the new lines
                     let parsed_output: Vec<&str> = output.split('\n').collect();
                     {
-                        let mut man = csvman_clone.lock().unwrap();
+                        let mut man = csvman_clone.lock().expect("Couldn't obtain mutex lock");
                         man.give_data(Data::Tempurature(parsed_output[0].parse().unwrap()));
                         man.give_data(Data::Humidity(parsed_output[1].parse().unwrap()));
                         man.give_data(Data::AirPressure(parsed_output[2].parse().unwrap()));

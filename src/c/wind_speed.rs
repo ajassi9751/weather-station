@@ -12,7 +12,6 @@ mod c {
     use crate::c::wind_speed::Wind_data;
     unsafe extern "C" {
         pub fn print_wind_speed();
-        #[no_mangle]
         pub fn get_wind_speed(data: *mut Wind_data);
     }
 }
