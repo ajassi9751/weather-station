@@ -56,7 +56,7 @@ fn main() {
 }
 
 #[cfg(not(feature = "no_pi"))]
-const DATA_FREQUENCY: u64 = 300;
+const DATA_FREQUENCY: u64 = 20;
 
 #[cfg(not(feature = "no_pi"))]
 fn pi_data() {
