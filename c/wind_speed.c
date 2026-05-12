@@ -64,7 +64,6 @@ void get_wind_speed (Wind_data* data) {
     data->rots_per_second = rots_per_second;
     data->windspeed = windspeed;
     data->windspeedMPH = windspeed*2.237;
-    printf("Windspeed from c file: %f", windspeed);
     // printf("%d rotations = %f rotations/second", rotations, rots_per_second);
     // printf("Windspeed is %f m/s = %f mph", windspeed, windspeed*2.237);
 }
