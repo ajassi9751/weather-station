@@ -3,7 +3,7 @@ Code for the GHSweather station for the geo/yci club
 
 What this project does:\
 This project is code for a raspberry pi weather station\
-It handles interacting with sensors like the dht-11\
+It handles interacting with sensors like the BME280\
 Then it stores data from those sensors in csv files that are changed out weekly\
 It also may in the future support some kind of socket protocol to send data in real time\
 This would be useful for live displays of weather\
