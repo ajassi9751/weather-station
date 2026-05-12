@@ -7,7 +7,6 @@ use std::fs::{read_dir, write};
 #[cfg(not(feature = "rust_only"))]
 use std::process::exit;
 
-// I wonder if there is a way to auto install wiringPi, that would be great
 // Only compiles if c code is allowed
 #[cfg(not(feature = "rust_only"))]
 fn main() {
