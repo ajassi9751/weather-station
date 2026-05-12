@@ -14,8 +14,8 @@ Languages:\
 This project uses 3-4 languages (depending on if you count nyx)\
 C because it can be used with rust easily, its compiled, meaning it uses much less power and is faster\
 C also has many examples of how to use its libraries like wiringPi to interact with sensors\
-Python is never called in the real code but its helpful for testing as there are many examples of how to use python libraries with sensors\
-Rust becuase I like it and it has great ways to integrate with c while having great abstraction, a great build system, and has libraries like chrono to help with dates\
+Python is only used for the BME280 (via a pipe with rust code) as I couldn't find out how to interact with it in other languages as it uses i2c rather that GPIO also python has the most examples of how to use its libraries with sensors and as the most libraries as well\
+Rust becuase I like it and it has great ways to integrate with c while having great abstraction, a great build system, and has libraries like chrono to help with dates while being compiled\
 Nyx is just here for a small but convinient "build system" (more like a thin wrapper around cargo) and for people who like nyx (and nix related things)
 
 Build instructions:\
