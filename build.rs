@@ -11,9 +11,6 @@ use std::process::exit;
 // Only compiles if c code is allowed
 #[cfg(not(feature = "rust_only"))]
 fn main() {
-    // unsafe {
-    //     std::env::set_var("CFLAGS", "-l wiringPi");
-    // }
     // Handle setting c macros based on features
     #[cfg(feature = "no_pi")]
     {
@@ -38,6 +35,7 @@ fn main() {
     let mut filenames: Vec<String> = Vec::new();
     get_file_paths(&mut filenames, "c/");
     let mut builder = Build::new();
+    // Only links to wiringPi if we are allowed to use a pi
     #[cfg(not(feature = "no_pi"))]
     {
         builder.flag("-lwiringPi");
@@ -49,10 +47,8 @@ fn main() {
     // Only links to wiringPi if we are allowed to use a pi
     #[cfg(not(feature = "no_pi"))]
     {
-        // println!("cargo:rustc-link-search=native=/usr/local/lib");
         println!("cargo:rustc-link-lib=wiringPi");
     }
-    // Build::new().file("c/main.c").compile("main");
 }
 
 // If c compilation is disabled, use this main
