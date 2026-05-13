@@ -3,8 +3,6 @@
 mod c {
     unsafe extern "C" {
         pub fn read_dht11_dat();
-    }
-    unsafe extern "C" {
         pub fn setup_wiring_pi();
     }
 }
