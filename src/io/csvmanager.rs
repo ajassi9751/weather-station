@@ -69,7 +69,7 @@ impl csvmanager {
             prevcsvpath: String::from(""),
         }
     }
-    // You can give data of any enum that implements the give_data trait
+    // You can give data of any enum that implements the MatchIntoType trait
     // This is potentially needed for multithreading
     // Ensures data arrives in correct order with type saftey
     // This is the main function that users will interact with
