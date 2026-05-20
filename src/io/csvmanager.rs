@@ -155,7 +155,7 @@ impl csvmanager {
             &self.prevcsvpath
         }
     }
-    // Changes to a "new" csv by removing th ebody of it and writing to csvmanager.txt
+    // Changes to a "new" csv by removing the body of it and writing to csvmanager.txt
     fn change_csv(&mut self) {
         self.currentcsv.remove_body();
         // Maybe don't use .expect becuase this runs every week and could lead to data loss upon restart
