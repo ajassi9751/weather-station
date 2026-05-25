@@ -11,4 +11,4 @@ temperature = bme280.get_temperature()
 pressure = bme280.get_pressure()
 humidity = bme280.get_humidity()
 # Print
-print('{:05.2f}\n{:05.2f}\n{:05.2f}'.format(temperature, humidity, pressure))
+print('{}\n{}\n{}'.format(temperature, humidity, pressure))
